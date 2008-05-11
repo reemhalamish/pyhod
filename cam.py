@@ -35,6 +35,7 @@ if __name__ == '__main__':
 
 	# check that capture device is OK
 	if not capture:
+
 		print "Error opening capture device"
 		sys.exit (1)
 
@@ -50,6 +51,7 @@ if __name__ == '__main__':
 	hsv = cv.cvCreateImage(frame_size, 8, 3)
 	hue = cv.cvCreateImage(frame_size, 8, 1)
 	saturation = cv.cvCreateImage(frame_size, 8, 1)
+	val_scale = cv.cvCreateImage(frame_size, 8, 1)
 	value = cv.cvCreateImage(frame_size, 8, 1)
 	red = cv.cvCreateImage(frame_size, 8, 1)
 	green = cv.cvCreateImage(frame_size, 8, 1)
@@ -68,8 +70,11 @@ if __name__ == '__main__':
 		# compute the hue/sat/value from the hsv image
 		cv.cvSplit(hsv, hue, saturation, value, None)
 		cv.cvSplit(frame, blue, green, red, None);
+		cv.cvCvtScale(value, val_scale, 1/100.);
+		cv.cvCvtScale(val_scale, value, 1);
 
 		# handle events
+
 		k = highgui.cvWaitKey (10)
 
 		# we can now display the images
