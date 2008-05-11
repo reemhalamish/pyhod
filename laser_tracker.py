@@ -32,22 +32,24 @@ cam_height = 240
 def averageWhitePoints(frame):
     xtotal = 0.0
     ytotal = 0.0
-    count = 0.0001;
+    count = 0.0;
     for x in range(cam_width):
         for y in range(cam_height):
-            if(cv.cvGetReal2D(frame, y, x) > 100):
-                xtotal += xtotal + x
-                ytotal += ytotal + y
+            if(cv.cvGetReal2D(frame, y, x) > 200):
+                xtotal = xtotal + x
+                ytotal = ytotal + y
                 count += 1
-    if(xtotal < 0):
-        xtotal = 0
-    if(xtotal >= cam_width):
-        xtotal = cam_width-1
-    if(ytotal < 0):
-        ytotal = 0
-    if(ytotal >= cam_height):
-        ytotal = cam_height-1
-    return int(xtotal/count), int(ytotal/count)
+    #if(xtotal < 0):
+    #    xtotal = 0
+    #if(xtotal >= cam_width):
+    #    xtotal = cam_width-1
+    #if(ytotal < 0):
+    #    ytotal = 0
+    #if(ytotal >= cam_height):
+    #    ytotal = cam_height-1
+    if(count > 0):
+        return int(xtotal/count), int(ytotal/count)
+    return 0, 0
                 
 
 def create_and_position_window(name, xpos, ypos):
@@ -89,12 +91,12 @@ def main():
 # HSV color space Threshold values for a RED laser pointer 
 # hue
     hmin = 5 
-    hmax = 6 # hmax = 180
+    hmax = 100 # hmax = 180
 # saturation
     smin = 50
     smax = 100
 # value
-    vmin = 250
+    vmin = 200
     vmax = 256
 
     print "OpenCV version: %s (%d, %d, %d)" % (cv.CV_VERSION,
@@ -149,7 +151,7 @@ def main():
         # Merge the HSV components back together.
         cv.cvMerge(h_img, s_img, v_img, None, hsv_image)
 
-        xavg, yavg = averageWhitePoints(laser_img)
+        xavg, yavg = averageWhitePoints(v_img)
         print "(", xavg, ",", yavg, ")"
 
         #-----------------------------------------------------
