@@ -95,7 +95,7 @@ def removeErrantPoints(frame):
     
     for x in range(size.width):
         for y in range(size.height):
-            if(cv.cvGetReal2D(frame, y, x) > 200):
+            if(cv.cvGetReal2D(frame, y, x) > 0):
                 count = 0
                 count += same2ndValue(frame, x-1, y)
                 count += same2ndValue(frame, x+1, y)
@@ -111,7 +111,7 @@ def removeErrantPoints(frame):
 def same2ndValue(frame, x, y):
     size = cv.cvGetSize(frame)
     if(x >= 0 and x < size.width and y >= 0 and y < size.height):
-        if(cv.cvGetReal2D(frame, y, x) <= 200):
+        if(cv.cvGetReal2D(frame, y, x) == 0):
             return 0
         else:
             return 1        #only return 1 if this pixel is also white
