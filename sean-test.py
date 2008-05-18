@@ -171,6 +171,7 @@ def main(args):
         	cv.cvAnd(hue, value, laser)
         	#cv.cvAnd(laser, value, laser)
 		
+		# stupid filter
 		#removeErrantPoints(laser)
 
 		cenX,cenY =  averageWhitePoints(laser)
