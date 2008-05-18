@@ -90,25 +90,53 @@ def averageWhitePoints(frame):
 
     	return int(xtotal/count), int(ytotal/count)
 
+def removeErrantPoints(frame):
+    size = cv.cvGetSize(frame)
+    
+    for x in range(size.width):
+        for y in range(size.height):
+            if(cv.cvGetReal2D(frame, y, x) > 200):
+                count = 0
+                count += same2ndValue(frame, x-1, y)
+                count += same2ndValue(frame, x+1, y)
+                count += same2ndValue(frame, x, y-1)
+                count += same2ndValue(frame, x, y+1)
+                count += same2ndValue(frame, x-1, y-1)
+                count += same2ndValue(frame, x-1, y+1)
+                count += same2ndValue(frame, x+1, y-1)
+                count += same2ndValue(frame, x+1, y+1)
+                if count == 0:
+                    cv.cvSet2D(frame, y, x, cv.cvScalar(0, 0, 0, 0))
+
+def same2ndValue(frame, x, y):
+    size = cv.cvGetSize(frame)
+    if(x >= 0 and x < size.width and y >= 0 and y < size.height):
+        if(cv.cvGetReal2D(frame, y, x) <= 200):
+            return 0
+        else:
+            return 1        #only return 1 if this pixel is also white
+    else:
+        return 0
+
 def main(args):
 	global capture
 	global hmax, hmin
 	highgui.cvNamedWindow('Camera', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
-	highgui.cvNamedWindow('Satuation', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Saturation', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Value', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Laser', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvMoveWindow('Camera', 0, 10)
 	highgui.cvMoveWindow('Hue', 0, 350)
-	highgui.cvMoveWindow('Satuation', 360, 10)
+	highgui.cvMoveWindow('Saturation', 360, 10)
 	highgui.cvMoveWindow('Value', 360, 350)
 	highgui.cvMoveWindow('Laser', 700, 40)
 
 	highgui.cvCreateTrackbar("Brightness Trackbar","Camera",0,255, change_brightness);
 	highgui.cvCreateTrackbar("hmin Trackbar","Hue",hmin,180, change_hmin);
 	highgui.cvCreateTrackbar("hmax Trackbar","Hue",hmax,180, change_hmax);
-	highgui.cvCreateTrackbar("smin Trackbar","Satuation",smin,255, change_smin);
-	highgui.cvCreateTrackbar("smax Trackbar","Satuation",smax,255, change_smax);
+	highgui.cvCreateTrackbar("smin Trackbar","Saturation",smin,255, change_smin);
+	highgui.cvCreateTrackbar("smax Trackbar","Saturation",smax,255, change_smax);
 	highgui.cvCreateTrackbar("vmin Trackbar","Value",vmin,255, change_vmin);
 	highgui.cvCreateTrackbar("vmax Trackbar","Value",vmax,255, change_vmax);
 
@@ -124,7 +152,7 @@ def main(args):
 	hsv = cv.cvCreateImage(frameSize,8,3)
 	mask = cv.cvCreateImage(frameSize,8,1)
 	hue = cv.cvCreateImage(frameSize,8,1)
-	satuation = cv.cvCreateImage(frameSize,8,1)
+	saturation = cv.cvCreateImage(frameSize,8,1)
 	value = cv.cvCreateImage(frameSize,8,1)
 	laser = cv.cvCreateImage(frameSize,8,1)
 	
@@ -133,16 +161,18 @@ def main(args):
 
 		cv.cvCvtColor(frame, hsv, cv.CV_BGR2HSV)	
 		#cv.cvInRangeS(hsv,hsv_min,hsv_max,mask)
-		cv.cvSplit(hsv,hue,satuation,value,None)
+		cv.cvSplit(hsv,hue,saturation,value,None)
 	
 		cv.cvInRangeS(hue,hmin,hmax,hue)
-		cv.cvInRangeS(satuation,smin,smax,satuation)
+		cv.cvInRangeS(saturation,smin,smax,saturation)
 		cv.cvInRangeS(value,vmin,vmax,value)
 		#cv.cvInRangeS(hue,0,180,hue)
 
         	cv.cvAnd(hue, value, laser)
         	#cv.cvAnd(laser, value, laser)
 		
+		#removeErrantPoints(laser)
+
 		cenX,cenY =  averageWhitePoints(laser)
 		#print cenX,cenY
 		draw_target(frame,cenX,cenY)
@@ -150,7 +180,7 @@ def main(args):
 		
 		highgui.cvShowImage('Camera',frame)
 		highgui.cvShowImage('Hue',hue)
-		highgui.cvShowImage('Satuation',satuation)
+		highgui.cvShowImage('Saturation',saturation)
 		highgui.cvShowImage('Value',value)
 		highgui.cvShowImage('Laser',laser)
 
