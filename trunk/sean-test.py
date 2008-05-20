@@ -4,6 +4,11 @@ import sys
 from opencv import cv
 from opencv import highgui
 
+
+
+iwidth = 320
+iheight = 240 
+
 hmin = 4 
 hmax = 18 
 
@@ -143,8 +148,8 @@ def main(args):
 	print "grabbing camera"
 	capture = highgui.cvCreateCameraCapture(0)
 	print "found camera"
-	highgui.cvSetCaptureProperty(capture,highgui.CV_CAP_PROP_FRAME_WIDTH, 320)
-	highgui.cvSetCaptureProperty(capture,highgui.CV_CAP_PROP_FRAME_HEIGHT, 240)
+	highgui.cvSetCaptureProperty(capture,highgui.CV_CAP_PROP_FRAME_WIDTH, iwidth)
+	highgui.cvSetCaptureProperty(capture,highgui.CV_CAP_PROP_FRAME_HEIGHT, iheight)
 
 	frame = highgui.cvQueryFrame(capture)
 	frameSize = cv.cvGetSize(frame)
