@@ -126,8 +126,8 @@ def same2ndValue(frame, x, y):
 def main(args):
 	global capture
 	global hmax, hmin
-	highgui.cvNamedWindow('Camera', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Camera', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Saturation', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Value', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Laser', highgui.CV_WINDOW_AUTOSIZE)
@@ -168,10 +168,13 @@ def main(args):
 		#cv.cvInRangeS(hsv,hsv_min,hsv_max,mask)
 		cv.cvSplit(hsv,hue,saturation,value,None)
 	
-		cv.cvInRangeS(hue,hmin,hmax,hue)
-		cv.cvInRangeS(saturation,smin,smax,saturation)
-		cv.cvInRangeS(value,vmin,vmax,value)
-		#cv.cvInRangeS(hue,0,180,hue)
+
+		#print hmin, hmax
+		cv.cvInRangeS(hue,cv.cvScalar(hmin),cv.cvScalar(hmax),hue)
+		cv.cvInRangeS(saturation,cv.cvScalar(smin),cv.cvScalar(smax),saturation)
+		cv.cvInRangeS(value,cv.cvScalar(vmin),cv.cvScalar(vmax),value)
+		
+		#cv.cvInRangeS(hue,cv.cvScalar(0),cv.cvScalar(180),hue)
 
         	cv.cvAnd(hue, value, laser)
         	#cv.cvAnd(laser, value, laser)
@@ -184,8 +187,8 @@ def main(args):
 		draw_target(frame,cenX,cenY)
 		#draw_target(frame,200,1)
 		
-		highgui.cvShowImage('Camera',frame)
 		highgui.cvShowImage('Hue',hue)
+		highgui.cvShowImage('Camera',frame)
 		highgui.cvShowImage('Saturation',saturation)
 		highgui.cvShowImage('Value',value)
 		highgui.cvShowImage('Laser',laser)
