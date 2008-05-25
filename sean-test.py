@@ -11,6 +11,10 @@ iheight = 240
 
 hmin = 4 
 hmax = 18 
+red_hmin = 130
+red_hmax = 180
+green_hmin = 55
+green_hmax = 100
 
 vmin = 140 
 vmax = 255 
@@ -30,6 +34,22 @@ def change_hmin(p):
 def change_hmax(p):
 	global hmax
 	hmax = p
+
+def change_red_hmin(p):
+	global red_hmin
+	red_hmin = p
+
+def change_red_hmax(p):
+	global red_hmax
+	red_hmax = p
+
+def change_green_hmin(p):
+	global green_hmin
+	green_hmin = p
+
+def change_green_hmax(p):
+	global green_hmax
+	green_hmax = p
 
 def change_smin(p):
 	global smin
@@ -128,22 +148,37 @@ def main(args):
 	global hmax, hmin
 	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Camera', highgui.CV_WINDOW_AUTOSIZE)
-	highgui.cvNamedWindow('Saturation', highgui.CV_WINDOW_AUTOSIZE)
+
+#	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Red Hue', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Green Hue', highgui.CV_WINDOW_AUTOSIZE)
+#	highgui.cvNamedWindow('Saturation', highgui.CV_WINDOW_AUTOSIZE)
+
 	highgui.cvNamedWindow('Value', highgui.CV_WINDOW_AUTOSIZE)
-	highgui.cvNamedWindow('Laser', highgui.CV_WINDOW_AUTOSIZE)
+#	highgui.cvNamedWindow('Laser', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Red Laser', highgui.CV_WINDOW_AUTOSIZE)
+	highgui.cvNamedWindow('Green Laser', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvMoveWindow('Camera', 0, 10)
-	highgui.cvMoveWindow('Hue', 0, 350)
-	highgui.cvMoveWindow('Saturation', 360, 10)
-	highgui.cvMoveWindow('Value', 360, 350)
-	highgui.cvMoveWindow('Laser', 700, 40)
+	highgui.cvMoveWindow('Hue', 10, 350)
+#	highgui.cvMoveWindow('Saturation', 360, 10)
+	highgui.cvMoveWindow('Value', 10, 420)
+	#highgui.cvMoveWindow('Laser', 700, 40)
+	highgui.cvMoveWindow('Red Laser', 360, 10)
+	highgui.cvMoveWindow('Green Laser', 360, 360)
+	highgui.cvMoveWindow('Red Hue',700, 10 )
+	highgui.cvMoveWindow('Green Hue',700, 420) 
 
 	highgui.cvCreateTrackbar("Brightness Trackbar","Camera",0,255, change_brightness);
-	highgui.cvCreateTrackbar("hmin Trackbar","Hue",hmin,180, change_hmin);
-	highgui.cvCreateTrackbar("hmax Trackbar","Hue",hmax,180, change_hmax);
+#	highgui.cvCreateTrackbar("hmin Trackbar","Hue",hmin,180, change_hmin);
+#	highgui.cvCreateTrackbar("hmax Trackbar","Hue",hmax,180, change_hmax);
 	highgui.cvCreateTrackbar("smin Trackbar","Saturation",smin,255, change_smin);
 	highgui.cvCreateTrackbar("smax Trackbar","Saturation",smax,255, change_smax);
 	highgui.cvCreateTrackbar("vmin Trackbar","Value",vmin,255, change_vmin);
 	highgui.cvCreateTrackbar("vmax Trackbar","Value",vmax,255, change_vmax);
+	highgui.cvCreateTrackbar("red hmin Trackbar","Red Hue",red_hmin,180, change_red_hmin);
+	highgui.cvCreateTrackbar("red hmax Trackbar","Red Hue",red_hmax,180, change_red_hmax);
+	highgui.cvCreateTrackbar("green hmin Trackbar","Green Hue",green_hmin,180, change_green_hmin);
+	highgui.cvCreateTrackbar("green hmax Trackbar","Green Hue",green_hmax,180, change_green_hmax);
 
 	print "grabbing camera"
 	capture = highgui.cvCreateCameraCapture(0)
@@ -156,42 +191,56 @@ def main(args):
 
 	hsv = cv.cvCreateImage(frameSize,8,3)
 	mask = cv.cvCreateImage(frameSize,8,1)
-	hue = cv.cvCreateImage(frameSize,8,1)
+#	hue = cv.cvCreateImage(frameSize,8,1)
+	red_hue = cv.cvCreateImage(frameSize,8,1)
+	green_hue = cv.cvCreateImage(frameSize,8,1)
 	saturation = cv.cvCreateImage(frameSize,8,1)
 	value = cv.cvCreateImage(frameSize,8,1)
-	laser = cv.cvCreateImage(frameSize,8,1)
+#	laser = cv.cvCreateImage(frameSize,8,1)
+	red_laser = cv.cvCreateImage(frameSize,8,1)
+	green_laser = cv.cvCreateImage(frameSize,8,1)
 	
 	while 1:
 		frame = highgui.cvQueryFrame(capture)
 
 		cv.cvCvtColor(frame, hsv, cv.CV_BGR2HSV)	
 		#cv.cvInRangeS(hsv,hsv_min,hsv_max,mask)
-		cv.cvSplit(hsv,hue,saturation,value,None)
+		cv.cvSplit(hsv,red_hue,saturation,value,None)
+		cv.cvSplit(hsv,green_hue,saturation,value,None)
 	
+		cv.cvInRangeS(red_hue,red_hmin,red_hmax,red_hue)
+		cv.cvInRangeS(green_hue, green_hmin, green_hmax, green_hue)
+#		cv.cvInRangeS(saturation,smin,smax,saturation)
+		cv.cvInRangeS(value,vmin,vmax,value)
+		#cv.cvInRangeS(hue,0,180,hue)
 
-		#print hmin, hmax
-		cv.cvInRangeS(hue,cv.cvScalar(hmin),cv.cvScalar(hmax),hue)
-		cv.cvInRangeS(saturation,cv.cvScalar(smin),cv.cvScalar(smax),saturation)
-		cv.cvInRangeS(value,cv.cvScalar(vmin),cv.cvScalar(vmax),value)
-		
-		#cv.cvInRangeS(hue,cv.cvScalar(0),cv.cvScalar(180),hue)
+		cv.cvAnd(red_hue, value, red_laser)
+		cv.cvAnd(green_hue, value, green_laser)
+        #cv.cvAnd(laser, value, laser)
 
-        	cv.cvAnd(hue, value, laser)
-        	#cv.cvAnd(laser, value, laser)
 		
 		# stupid filter
 		#removeErrantPoints(laser)
 
-		cenX,cenY =  averageWhitePoints(laser)
+		cenX,cenY =  averageWhitePoints(green_laser)
 		#print cenX,cenY
 		draw_target(frame,cenX,cenY)
 		#draw_target(frame,200,1)
+		cenX, cenY = averageWhitePoints(red_laser)
+		draw_target(frame,cenX,cenY)
 		
-		highgui.cvShowImage('Hue',hue)
+#		highgui.cvShowImage('Hue',hue)
 		highgui.cvShowImage('Camera',frame)
-		highgui.cvShowImage('Saturation',saturation)
+
+#		highgui.cvShowImage('Hue',hue)
+		highgui.cvShowImage('Red Hue', red_hue)
+		highgui.cvShowImage('Green Hue', green_hue)
+#		highgui.cvShowImage('Saturation',saturation)
+
 		highgui.cvShowImage('Value',value)
-		highgui.cvShowImage('Laser',laser)
+#		highgui.cvShowImage('Laser',laser)
+		highgui.cvShowImage('Red Laser',red_laser)
+		highgui.cvShowImage('Green Laser',green_laser)
 
 		highgui.cvWaitKey(10)
 
