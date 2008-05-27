@@ -41,34 +41,57 @@ class TurretControl:
 		else:
 			print 'No NXT bricks found'
 
-		self.motor = Motor(self.bconn,PORT_A)
+		self.x_motor = Motor(self.bconn,PORT_A)
+		self.y_motor = Motor(self.bconn,PORT_B)
+
+	def left(self,degrees):
+		self.__rotate(degrees,self.x_motor,75)
+
+	def right(self,degrees):
+		self.__rotate(-1*degrees,self.x_motor,75)
+
+	def up(self,degrees):
+		self.__rotate(-1*degrees,self.y_motor,90)
+	
+	def down(self,degrees):
+		self.__rotate(degrees,self.y_motor,90)
 
 	def reset(self):
-		update(self.bconn,self.motor,Update.RESET_COUNT)
+		update(self.bconn,self.x_motor,Update.RESET_COUNT)
+		update(self.bconn,self.y_motor,Update.RESET_COUNT)
 
-	def rotate(self,degrees):
-		self.reset()
+	def __rotate(self,degrees,motor, power):
+
+		if(degrees == 0):
+			degrees = 1
+
+		#self.reset()
+		#print "START",self.motor.get_output_state();
+		
 		sign = 1
 		if(degrees < 0):
-			self.motor.power = -60
+			motor.power = -1*power
 			sign = -1
 		else:
-			self.motor.power = 60
+			motor.power = power
 
-		self.motor.mode = MODE_MOTOR_ON
-		self.motor.run_state = RUN_STATE_RUNNING
-		self.motor.tacho_limit = sign*degrees
+		motor.mode = MODE_MOTOR_ON
+		motor.run_state = RUN_STATE_RUNNING
+		motor.tacho_limit = sign*degrees
 		self.regulation = REGULATION_MOTOR_SPEED
-		self.motor.set_output_state()
-	
-		while(True):
-			rot_count = self.motor.get_output_state()[7]
-			print self.motor.get_output_state();
-			if(sign*rot_count >= sign*degrees):
-				break;
-			time.sleep(0.1)
+		motor.set_output_state()
+		
+		#print motor.get_output_state();
 
-#turret = TurretControl()
+"""
+turret = TurretControl()
+turret.reset()
+x_axis = int(sys.argv[1])
+y_axis = int(sys.argv[2])
+
+turret.left(45)
+turret.up(y_axis)
+"""
 #while(True):
 #	turret.rotate(200)
 #	turret.rotate(-200)
