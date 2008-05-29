@@ -43,18 +43,24 @@ class TurretControl:
 
 		self.x_motor = Motor(self.bconn,PORT_A)
 		self.y_motor = Motor(self.bconn,PORT_B)
+		self.trigger = Motor(self.bconn,PORT_C)
 
+	def fire(self):
+		self.__rotate(-15,self.trigger,100)
+		time.sleep(0.5)
+		self.__rotate(25,self.trigger,100)
+		
 	def left(self,degrees):
-		self.__rotate(degrees,self.x_motor,75)
+		self.__rotate(degrees,self.x_motor,85)
 
 	def right(self,degrees):
-		self.__rotate(-1*degrees,self.x_motor,75)
+		self.__rotate(-1*degrees,self.x_motor,85)
 
 	def up(self,degrees):
-		self.__rotate(-1*degrees,self.y_motor,90)
+		self.__rotate(-1*degrees,self.y_motor,70)
 	
 	def down(self,degrees):
-		self.__rotate(degrees,self.y_motor,90)
+		self.__rotate(degrees,self.y_motor,65)
 
 	def reset(self):
 		update(self.bconn,self.x_motor,Update.RESET_COUNT)
@@ -83,15 +89,13 @@ class TurretControl:
 		
 		#print motor.get_output_state();
 
+#turret = TurretControl()
+#turret.reset()
+#turret.fire()
 """
-turret = TurretControl()
-turret.reset()
 x_axis = int(sys.argv[1])
 y_axis = int(sys.argv[2])
 
 turret.left(45)
 turret.up(y_axis)
 """
-#while(True):
-#	turret.rotate(200)
-#	turret.rotate(-200)
