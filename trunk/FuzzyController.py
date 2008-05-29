@@ -67,7 +67,9 @@ class FuzzyController:
 
 		self.tc = TurretControl()
 
-	def update(self, x, y):
+	def update(self, x, y,allow_fire):
+		self.tc.reset()
+
 		x_val = (float(x) - self.mid_x)/self.mid_x
 		y_val = (float(y) - self.mid_y)/self.mid_y
 		
@@ -77,11 +79,25 @@ class FuzzyController:
 		print "X RESULT:",x_result
 		print "Y RESULT:",y_result
 
+		x_ok = False
+		y_ok = False
+
 		if(not (-0.05 < x_result and x_result < 0.05)):
 			if(x_result < 0.0):
 				self.tc.left(-45*x_result)
 			else:
 				self.tc.right(45*x_result)
+		else:
+			x_ok = True
+		
+		if(not (-0.2 < y_result and y_result < 0.2)):
+			if(y_result < 0.0):
+				self.tc.up(-20*y_result)
+			else:
+				self.tc.down(10*y_result)
+		else:
+			y_ok = True
+
 
 	def __calcResult(self,val):
 
