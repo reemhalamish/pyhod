@@ -3,6 +3,7 @@
 import sys
 from opencv import cv
 from opencv import highgui
+from math import *
 
 
 
@@ -16,14 +17,16 @@ red_hmax = 180
 green_hmin = 55
 green_hmax = 100
 
-vmin = 140 
+vmin = 150
 vmax = 255 
-smin = 147 
-smax = 255
+#smin = 147 
+#smax = 255
+
+stats = 1
 
 
-hsv_min = cv.cvScalar(0, smin, vmin, 0)
-hsv_max = cv.cvScalar(180, 256, vmax, 0)
+hsv_min = cv.cvScalar(0, 0, vmin, 0)
+hsv_max = cv.cvScalar(180, 255, vmax, 0)
 
 capture = None
 
@@ -51,13 +54,13 @@ def change_green_hmax(p):
 	global green_hmax
 	green_hmax = p
 
-def change_smin(p):
-	global smin
-	smin = p
+#def change_smin(p):
+#	global smin
+#	smin = p
 
-def change_smax(p):
-	global smax
-	smax = p
+#def change_smax(p):
+#	global smax
+#	smax = p
 
 def change_vmin(p):
 	global vmin
@@ -72,11 +75,17 @@ def change_brightness(p):
 	highgui.cvSetCaptureProperty(capture,highgui.CV_CAP_PROP_BRIGHTNESS, p)
 	print "change brightness",p;	
 
-def draw_target(img, x, y):
+def draw_target(img, x, y, color_name):
+
 	width = 10
-	color = cv.CV_RGB(0,255,0);
+	if color_name == "GREEN":
+		color = cv.CV_RGB(0,255,0)
+	else:
+		color = cv.CV_RGB(255,0,0)
 
 	size = cv.cvGetSize(img)
+	if x >= size.width or x < 0 or y >= size.height or y < 0:
+		return
 
 	#cv.cvSet2D(img,x,y,color);
 
@@ -111,9 +120,9 @@ def averageWhitePoints(frame):
 				ytotal = ytotal + y
 				count += 1
 	if count == 0:
-		return 0, 0
+		return -1, -1
 
-    	return int(xtotal/count), int(ytotal/count)
+	return int(xtotal/count), int(ytotal/count)
 
 def removeErrantPoints(frame):
     size = cv.cvGetSize(frame)
@@ -143,10 +152,26 @@ def same2ndValue(frame, x, y):
     else:
         return 0
 
+def printStats(greenp, redp):
+	outstring = ""
+	if greenp[0] == -1:
+		outstring += "Green fail | "
+	if redp[0] == -1:
+		outstring += "Red fail | "
+	if greenp[0] != -1 and redp[0] != -1:
+		xdiff = greenp[0] - redp[0]
+		ydiff = greenp[1] - redp[1]
+		distance = sqrt(xdiff*xdiff + ydiff*ydiff)
+		outstring += "Distance = %003.02f | " % distance
+
+	print outstring
+
+
 def main(args):
 	global capture
 	global hmax, hmin
-	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
+	global stats
+#	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Camera', highgui.CV_WINDOW_AUTOSIZE)
 
 #	highgui.cvNamedWindow('Hue', highgui.CV_WINDOW_AUTOSIZE)
@@ -159,7 +184,7 @@ def main(args):
 	highgui.cvNamedWindow('Red Laser', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvNamedWindow('Green Laser', highgui.CV_WINDOW_AUTOSIZE)
 	highgui.cvMoveWindow('Camera', 0, 10)
-	highgui.cvMoveWindow('Hue', 10, 350)
+#	highgui.cvMoveWindow('Hue', 10, 350)
 #	highgui.cvMoveWindow('Saturation', 360, 10)
 	highgui.cvMoveWindow('Value', 10, 420)
 	#highgui.cvMoveWindow('Laser', 700, 40)
@@ -171,8 +196,8 @@ def main(args):
 	highgui.cvCreateTrackbar("Brightness Trackbar","Camera",0,255, change_brightness);
 #	highgui.cvCreateTrackbar("hmin Trackbar","Hue",hmin,180, change_hmin);
 #	highgui.cvCreateTrackbar("hmax Trackbar","Hue",hmax,180, change_hmax);
-	highgui.cvCreateTrackbar("smin Trackbar","Saturation",smin,255, change_smin);
-	highgui.cvCreateTrackbar("smax Trackbar","Saturation",smax,255, change_smax);
+#	highgui.cvCreateTrackbar("smin Trackbar","Saturation",smin,255, change_smin);
+#	highgui.cvCreateTrackbar("smax Trackbar","Saturation",smax,255, change_smax);
 	highgui.cvCreateTrackbar("vmin Trackbar","Value",vmin,255, change_vmin);
 	highgui.cvCreateTrackbar("vmax Trackbar","Value",vmax,255, change_vmax);
 	highgui.cvCreateTrackbar("red hmin Trackbar","Red Hue",red_hmin,180, change_red_hmin);
@@ -218,16 +243,14 @@ def main(args):
 		cv.cvAnd(green_hue, value, green_laser)
         #cv.cvAnd(laser, value, laser)
 
-		
-		# stupid filter
 		#removeErrantPoints(laser)
 
-		cenX,cenY =  averageWhitePoints(green_laser)
+		green_cenX,green_cenY =  averageWhitePoints(green_laser)
 		#print cenX,cenY
-		draw_target(frame,cenX,cenY)
+		draw_target(frame, green_cenX, green_cenY, "GREEN")
 		#draw_target(frame,200,1)
-		cenX, cenY = averageWhitePoints(red_laser)
-		draw_target(frame,cenX,cenY)
+		red_cenX, red_cenY = averageWhitePoints(red_laser)
+		draw_target(frame, red_cenX, red_cenY, "RED")
 		
 #		highgui.cvShowImage('Hue',hue)
 		highgui.cvShowImage('Camera',frame)
@@ -242,7 +265,14 @@ def main(args):
 		highgui.cvShowImage('Red Laser',red_laser)
 		highgui.cvShowImage('Green Laser',green_laser)
 
-		highgui.cvWaitKey(10)
+		if stats:
+			printStats((green_cenX, green_cenY), (red_cenX, red_cenY))
+
+		k = highgui.cvWaitKey(10)
+		if k == '\x1b' or k == 'q':
+			sys.exit()
+		if k == 'p':
+			stats = (stats+1) % 2
 
 if __name__ == '__main__':
 	main(sys.argv[1:]);
