@@ -46,21 +46,21 @@ class TurretControl:
 		self.trigger = Motor(self.bconn,PORT_C)
 
 	def fire(self):
-		self.__rotate(-15,self.trigger,100)
+		self.__rotate(-10,self.trigger,90)
 		time.sleep(0.5)
-		self.__rotate(25,self.trigger,100)
+		self.__rotate(5,self.trigger,60)
 		
 	def left(self,degrees):
-		self.__rotate(degrees,self.x_motor,85)
+		self.__rotate(degrees,self.x_motor,75)
 
 	def right(self,degrees):
-		self.__rotate(-1*degrees,self.x_motor,85)
+		self.__rotate(-1*degrees,self.x_motor,75)
 
 	def up(self,degrees):
-		self.__rotate(-1*degrees,self.y_motor,70)
+		self.__rotate(-1*degrees,self.y_motor,75)
 	
 	def down(self,degrees):
-		self.__rotate(degrees,self.y_motor,65)
+		self.__rotate(degrees,self.y_motor,75)
 
 	def reset(self):
 		update(self.bconn,self.x_motor,Update.RESET_COUNT)

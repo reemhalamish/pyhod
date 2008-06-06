@@ -5,10 +5,10 @@ from opencv import cv
 from opencv import highgui
 from FuzzyController import FuzzyController
 
-hmin = 130 
-hmax = 180
+hmin = 55
+hmax = 100
 
-vmin = 225 
+vmin = 150 
 vmax = 255 
 smin = 147 
 smax = 255
@@ -128,7 +128,7 @@ def main(args):
 	satuation = cv.cvCreateImage(frameSize,8,1)
 	value = cv.cvCreateImage(frameSize,8,1)
 	laser = cv.cvCreateImage(frameSize,8,1)
-	turret = FuzzyController(frameSize.width,frameSize.height)	
+	turret = FuzzyController(frameSize.width,frameSize.height,True)	
 	move_count = 0
 	while 1:
 		frame = highgui.cvQueryFrame(capture)
