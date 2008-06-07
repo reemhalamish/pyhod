@@ -55,17 +55,17 @@ class FuzzyController:
 		self.mid_x = float(size_x)/2.0
 		self.mid_y = float(size_y)/2.0
 
-		self.center = FuzzyTriangle(-0.2,0.2)
+		self.center = FuzzyTriangle(-0.1,0.1)
 
-		self.slight_neg = FuzzyTriangle(-0.4,-0.1)
+		self.slight_neg = FuzzyTriangle(-0.4,-0.05)
 		self.neg = FuzzyTriangle(-0.7,-0.3)
 		self.far_neg = FuzzyLeftShoulder(-0.9,-0.5)
 		
-		self.slight_pos = FuzzyTriangle(0.1,0.4)
+		self.slight_pos = FuzzyTriangle(0.05,0.4)
 		self.pos = FuzzyTriangle(0.3,0.7)
 		self.far_pos = FuzzyRightShoulder(0.5,0.9)
 
-		self.x_target_offset = 0.0
+		self.x_target_offset = -0.2
 		self.y_target_offset = -0.2
 
 		self.allow_fire = allow_fire
