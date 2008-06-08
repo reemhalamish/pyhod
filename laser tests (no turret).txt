@@ -1,0 +1,96 @@
+Low Light: 20 feet
+value: 86-255
+red hue: 145-180
+green hue: 53-118
+
+Total Frames: 210 | Green Failure: 0.13 |  Red Failure: 0.07 | Frames/Sec: 3.55 | Total Time: 59.22
+Total Frames: 210 | Green Failure: 0.12 |  Red Failure: 0.00 | Frames/Sec: 3.53 | Total Time: 59.44
+Total Frames: 207 | Green Failure: 0.25 |  Red Failure: 0.04 | Frames/Sec: 3.47 | Total Time: 59.66
+Total Frames: 217 | Green Failure: 0.18 |  Red Failure: 0.01 | Frames/Sec: 3.62 | Total Time: 59.91
+Total Frames: 213 | Green Failure: 0.15 |  Red Failure: 0.00 | Frames/Sec: 3.56 | Total Time: 59.91
+
+
+Low Light: 15 feet
+value: 42-255
+red hue: 146-180
+green hue: 38-99
+
+Total Frames: 209 | Green Failure: 0.16 |  Red Failure: 0.02 | Frames/Sec: 3.44 | Total Time: 60.80
+Total Frames: 211 | Green Failure: 0.07 |  Red Failure: 0.00 | Frames/Sec: 3.48 | Total Time: 60.56
+Total Frames: 207 | Green Failure: 0.09 |  Red Failure: 0.00 | Frames/Sec: 3.43 | Total Time: 60.34
+Total Frames: 214 | Green Failure: 0.08 |  Red Failure: 0.00 | Frames/Sec: 3.55 | Total Time: 60.20
+Total Frames: 215 | Green Failure: 0.08 |  Red Failure: 0.00 | Frames/Sec: 3.58 | Total Time: 60.13
+
+
+Low Light: 10 feet
+value: 47-255
+red hue: 0-38
+green hue: 38-106
+
+Total Frames: 216 | Green Failure: 0.03 |  Red Failure: 0.12 | Frames/Sec: 3.64 | Total Time: 59.42
+Total Frames: 218 | Green Failure: 0.03 |  Red Failure: 0.01 | Frames/Sec: 3.65 | Total Time: 59.69
+Total Frames: 217 | Green Failure: 0.03 |  Red Failure: 0.01 | Frames/Sec: 3.62 | Total Time: 59.92
+Total Frames: 214 | Green Failure: 0.04 |  Red Failure: 0.15 | Frames/Sec: 3.61 | Total Time: 59.34
+Total Frames: 214 | Green Failure: 0.03 |  Red Failure: 0.08 | Frames/Sec: 3.60 | Total Time: 59.44
+
+
+Low Light: 5 feet
+value: 56-255
+red hue: 0-11
+green hue: 38-98
+
+Total Frames: 215 | Green Failure: 0.02 |  Red Failure: 0.00 | Frames/Sec: 3.60 | Total Time: 59.69
+Total Frames: 221 | Green Failure: 0.02 |  Red Failure: 0.00 | Frames/Sec: 3.66 | Total Time: 60.38
+Total Frames: 220 | Green Failure: 0.02 |  Red Failure: 0.00 | Frames/Sec: 3.65 | Total Time: 60.28
+Total Frames: 213 | Green Failure: 0.02 |  Red Failure: 0.00 | Frames/Sec: 3.56 | Total Time: 59.89
+Total Frames: 220 | Green Failure: 0.00 |  Red Failure: 0.00 | Frames/Sec: 3.68 | Total Time: 59.75
+
+
+High Light: 20 feet
+value: 125-255
+red hue: 0-33
+green hue: 53-105
+
+Total Frames: 226 | Green Failure: 0.34 |  Red Failure: 0.03 | Frames/Sec: 3.69 | Total Time: 61.33
+Total Frames: 219 | Green Failure: 0.31 |  Red Failure: 0.10 | Frames/Sec: 3.68 | Total Time: 59.47
+Total Frames: 226 | Green Failure: 0.21 |  Red Failure: 0.06 | Frames/Sec: 3.56 | Total Time: 63.44
+Total Frames: 211 | Green Failure: 0.30 |  Red Failure: 0.06 | Frames/Sec: 3.55 | Total Time: 59.52
+Total Frames: 219 | Green Failure: 0.29 |  Red Failure: 0.06 | Frames/Sec: 3.66 | Total Time: 59.91
+
+
+High Light:
+value: 108-255
+red hue: 159-180
+green hue: 42-105
+
+red laser detection has a tendency to chase the green detection in higher light
+
+Total Frames: 210 | Green Failure: 0.09 |  Red Failure: 0.00 | Frames/Sec: 3.51 | Total Time: 59.80
+Total Frames: 216 | Green Failure: 0.13 |  Red Failure: 0.00 | Frames/Sec: 3.53 | Total Time: 61.17
+Total Frames: 210 | Green Failure: 0.13 |  Red Failure: 0.00 | Frames/Sec: 3.49 | Total Time: 60.22
+Total Frames: 214 | Green Failure: 0.12 |  Red Failure: 0.00 | Frames/Sec: 3.54 | Total Time: 60.42
+Total Frames: 212 | Green Failure: 0.09 |  Red Failure: 0.00 | Frames/Sec: 3.53 | Total Time: 60.13
+
+
+High Light:
+value: 114-255
+red hue: 147-180
+green hue: 53-110
+
+Total Frames: 222 | Green Failure: 0.12 |  Red Failure: 0.00 | Frames/Sec: 3.67 | Total Time: 60.55
+Total Frames: 211 | Green Failure: 0.12 |  Red Failure: 0.00 | Frames/Sec: 3.55 | Total Time: 59.42
+Total Frames: 215 | Green Failure: 0.09 |  Red Failure: 0.00 | Frames/Sec: 3.57 | Total Time: 60.17
+Total Frames: 211 | Green Failure: 0.11 |  Red Failure: 0.00 | Frames/Sec: 3.49 | Total Time: 60.41
+Total Frames: 217 | Green Failure: 0.17 |  Red Failure: 0.00 | Frames/Sec: 3.66 | Total Time: 59.23
+
+
+High Light:
+value: 120
+red hue: 135-180
+green hue: 53-105
+
+Total Frames: 208 | Green Failure: 0.04 |  Red Failure: 0.00 | Frames/Sec: 3.49 | Total Time: 59.61
+Total Frames: 215 | Green Failure: 0.03 |  Red Failure: 0.03 | Frames/Sec: 3.62 | Total Time: 59.45
+Total Frames: 210 | Green Failure: 0.02 |  Red Failure: 0.02 | Frames/Sec: 3.53 | Total Time: 59.53
+Total Frames: 218 | Green Failure: 0.01 |  Red Failure: 0.08 | Frames/Sec: 3.64 | Total Time: 59.95
+Total Frames: 221 | Green Failure: 0.03 |  Red Failure: 0.01 | Frames/Sec: 3.73 | Total Time: 59.33
