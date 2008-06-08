@@ -2,6 +2,8 @@ DOC = egpaper_final.tex
 #SUBDOCS =
 #FIGURES = 
 #FIGURES_DEL =
+GRAPHS = laser_high.eps laser_low.eps
+
 
 LATEX = latex
 BIBTEX = bibtex
@@ -16,13 +18,20 @@ RERUNBIB = "No file.*\.bbl|Citation.*undefined"
 
 .PHONY: dvi ps pdf clean
 
+all: ${GRAPHS} ${FIGURES} pdf ${SUBDOCS}
+
 pdf: $(DOC:.tex=.pdf)
 ps:  $(DOC:.tex=.ps)
 dvi: $(DOC:.tex=.dvi)
 
-all: ${FIGURES} pdf ${SUBDOCS}
 
-%.dvi: %.tex ${FIGURES}
+laser_low.eps: graphs/laser_low.plot graphs/laser_low.txt
+	gnuplot graphs/laser_low.plot
+
+laser_high.eps: graphs/laser_high.plot graphs/laser_high.txt
+	gnuplot graphs/laser_high.plot
+
+%.dvi: %.tex ${FIGURES} ${GRAPHS}
 	$(LATEX) $<
 	egrep -c $(RERUNBIB) $*.log && ($(BIBTEX) $*;$(LATEX) $<) ; true
 	egrep $(RERUN) $*.log && ($(LATEX) $<) ; true
@@ -49,6 +58,7 @@ clean:
         $(DOC:.tex=.bbl) \
         $(DOC:.tex=.blg) \
         ${FIGURES_DEL}
+	rm -f ${GRAPHS}
 
 veryclean: clean
 	@\rm -f *~
