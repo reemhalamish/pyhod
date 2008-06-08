@@ -55,7 +55,7 @@ Our project is a laser guided turret. The turret consists of an Airsoft gun with
 \section{Introduction}
 
 
-\section{Algorithm}
+\section{Approach}
 
 
 \subsection{Laser Identification}
@@ -110,34 +110,42 @@ We are using a low cost airsoft gun manufactured b DPMS. It is electrically oper
 
 
 \section{Experimentation}
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
+
+\subsection{Laser Detection}
+
+The experimentation for laser detection was designed to test the detection at various distances from a wall under different lighting conditions. The camera was placed 5, 10, 15, and 20 feet from a white wall. At each location, the camera was given a period of a minute to detect a green moving laser and a red stationary laser that were in the view of the camera for the entire period. Detection accuracy was determined by examing how many frames out of the total number that the laser points were successfully detected. In addition, a low light and high light conditions were creating to see how additional light affect the detection. Each experimentation configuration was repeated 5 times to obtain an average.
+
+\ref{fig:laser_low} shows the results of the laser detection experimentation using low light conditions. Generally, the further away the camera was from the laser point, the more difficult it was to successfully detect it. The failure rate for the moving green laser at 5 feet was a mere 1.6\% while the failure rate at 20 feet went up to 16.6\%. This can be attribited to the pointer getting smaller with increased distance from the wall, thus becoming harder to pin point. More interesting though is that the failure rate for detecting the stationary red laser was much lower than the green laser. This is mostly likely caused by the fact that exposure time on the camera sensor for the green laser was lower at any givin time due to its movement.  
+
+\ref{fig:laser_high} shows similar results as \ref{fig:laser_low}. The higher lighting conditions made detection more difficult due to the fact that the laser points' intensities didn't stand out as well. The failure rate for the green laser was 2.6\% at five feet and 29\% at 20 feet. These are roughly twice as high as the low light results. 
 
 \begin{figure}[t]
 \begin{center}
-  \includegraphics[width=0.8\linewidth]{test_figure.eps}
+  \includegraphics[width=0.8\linewidth]{laser_low.eps}
 \end{center}
-   \caption{Example of caption.  It is set in Roman so that mathematics
-   (always set in Roman: $B \sin A = A \sin B$) may be included without an
-   ugly clash.}
+   \caption{Laser detection in Low Light.}
+\label{fig:laser_low}
 \label{fig:long}
 \label{fig:onecol}
 \end{figure}
 
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{laser_high.eps}
+\end{center}
+   \caption{Laser detection in High Light.}
+\label{fig:laser_high}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
 
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
+\subsection{Distance Estimation}
 
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
+Figure TODO shows the results of the distance estimation.
 
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
+The distance estimation was not implemented into the turret aim logic due to the low accuracy at distances over eight feet. One of the problems was that the distance estimation accuracy is directly related to how far the distance laser is mounted away from the optical axis.  
 
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
-
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
-
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
-
-We are using a low cost airsoft gun manufactured b DPMS. It is electrically operated airsoft gun that fires the standard 6mm plastic balls typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
-
+\subsection{Turret Accuracy}
 
 
 \section{Discussion and Conclusion}
