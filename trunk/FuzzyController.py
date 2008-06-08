@@ -65,14 +65,14 @@ class FuzzyController:
 		self.pos = FuzzyTriangle(0.3,0.7)
 		self.far_pos = FuzzyRightShoulder(0.5,0.9)
 
-		self.x_target_offset = -0.2
-		self.y_target_offset = -0.2
+		self.x_target_offset = -0.055
+		self.y_target_offset = 0.073
 
 		self.allow_fire = allow_fire
 		self.timer = time.time()
 		self.tc = TurretControl()
 
-	def update(self, x, y,allow_fire):
+	def update(self, x, y):
 		self.tc.reset()
 
 		x_val = (float(x) - self.mid_x)/self.mid_x
@@ -110,7 +110,7 @@ class FuzzyController:
 			tcur = time.time()
 			t_ms = ((tcur-self.timer)*1000)
 			print t_ms
-			if(t_ms > 10000):
+			if(t_ms > 5000):
 				self.tc.fire()
 				self.timer = time.time()
 			

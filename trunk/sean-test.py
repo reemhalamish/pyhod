@@ -5,18 +5,19 @@ from opencv import cv
 from opencv import highgui
 from math import sqrt
 from time import time
+from FuzzyController import FuzzyController
 
 iwidth = 320
 iheight = 240 
 
 hmin = 4 
 hmax = 18 
-red_hmin = 130
+red_hmin = 127
 red_hmax = 180
-green_hmin = 55
+green_hmin = 38
 green_hmax = 100
 
-vmin = 150
+vmin = 125
 vmax = 255 
 
 # global statistics variables
@@ -135,8 +136,8 @@ def printRunningStats(greenp, redp):
 def printTotalStats():
 	global frameCount, redFailCount, greenFailCount, startTime
 	endTime = time()
-	table = {"fc": frameCount, "gf" : greenFailCount/(frameCount*1.0), "rf" : redFailCount/(frameCount*1.0), "fps" : frameCount/(endTime-startTime)}
-	print "Total Frames: %(fc)d | Green Failure: %(gf)1.02f |  Red Failure: %(rf)1.02f | Frames/Sec: %(fps)2.02f" % table
+	table = {"fc": frameCount, "gf" : greenFailCount/(frameCount*1.0), "rf" : redFailCount/(frameCount*1.0), "fps" : frameCount/(endTime-startTime), "runtime" : endTime-startTime}
+	print "Total Frames: %(fc)d | Green Failure: %(gf)1.02f |  Red Failure: %(rf)1.02f | Frames/Sec: %(fps)2.02f | Total Time: %(runtime)2.02f" % table
 	frameCount = 0
 	redFailCount = 0
 	greenFailCount = 0
@@ -184,7 +185,8 @@ def main(args):
 	value = cv.cvCreateImage(frameSize,8,1)
 	red_laser = cv.cvCreateImage(frameSize,8,1)
 	green_laser = cv.cvCreateImage(frameSize,8,1)
-
+	turret = FuzzyController(frameSize.width,frameSize.height,True)	
+	
 	while 1:
 		frame = highgui.cvQueryFrame(capture)
 
@@ -192,9 +194,9 @@ def main(args):
 		cv.cvSplit(hsv,red_hue,saturation,value,None)
 		cv.cvSplit(hsv,green_hue,saturation,value,None)
 	
-		cv.cvInRangeS(red_hue,red_hmin,red_hmax,red_hue)
-		cv.cvInRangeS(green_hue, green_hmin, green_hmax, green_hue)
-		cv.cvInRangeS(value,vmin,vmax,value)
+		cv.cvInRangeS(red_hue, cv.cvScalar(red_hmin), cv.cvScalar(red_hmax), red_hue)
+		cv.cvInRangeS(green_hue, cv.cvScalar(green_hmin), cv.cvScalar(green_hmax), green_hue)
+		cv.cvInRangeS(value, cv.cvScalar(vmin), cv.cvScalar(vmax), value)
 
 		cv.cvAnd(red_hue, value, red_laser)
 		cv.cvAnd(green_hue, value, green_laser)
@@ -203,6 +205,9 @@ def main(args):
 		draw_target(frame, green_cenX, green_cenY, "GREEN")
 		red_cenX, red_cenY = averageWhitePoints(red_laser)
 		draw_target(frame, red_cenX, red_cenY, "RED")
+		
+		if(green_cenX >= 0 and green_cenY >= 0):# and move_count <= 0):
+			turret.update(green_cenX,green_cenY)
 		
 		highgui.cvShowImage('Camera',frame)
 		highgui.cvShowImage('Red Hue', red_hue)
