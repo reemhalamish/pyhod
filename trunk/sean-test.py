@@ -139,7 +139,7 @@ def printTotalStats():
 	table = {"fc": frameCount, "gf" : greenFailCount/(frameCount*1.0), "rf" : redFailCount/(frameCount*1.0), "fps" : frameCount/(endTime-startTime), "runtime" : endTime-startTime}
 	print "Total Frames: %(fc)d | Green Failure: %(gf)1.02f |  Red Failure: %(rf)1.02f | Frames/Sec: %(fps)2.02f | Total Time: %(runtime)2.02f" % table
 	frameCount = 0
-	redFailCount = 0
+	redFailCount = 09
 	greenFailCount = 0
 
 def main(args):
