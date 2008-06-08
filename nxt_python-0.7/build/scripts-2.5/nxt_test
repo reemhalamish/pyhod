@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!C:\Python25\python.exe
 
 import nxt.locator
 import nxt.brick

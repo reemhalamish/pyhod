@@ -137,9 +137,9 @@ def main(args):
 		#cv.cvInRangeS(hsv,hsv_min,hsv_max,mask)
 		cv.cvSplit(hsv,hue,satuation,value,None)
 	
-		cv.cvInRangeS(hue,hmin,hmax,hue)
-		cv.cvInRangeS(satuation,smin,smax,satuation)
-		cv.cvInRangeS(value,vmin,vmax,value)
+		cv.cvInRangeS(hue,cv.cvScalar(hmin),cv.cvScalar(hmax),hue)
+		cv.cvInRangeS(satuation,cv.cvScalar(smin),cv.cvScalar(smax),satuation)
+		cv.cvInRangeS(value,cv.cvScalar(vmin),cv.cvScalar(vmax),value)
 		#cv.cvInRangeS(hue,0,180,hue)
 
         	cv.cvAnd(hue, value, laser)
@@ -175,7 +175,9 @@ def main(args):
 		highgui.cvShowImage('Value',value)
 		highgui.cvShowImage('Laser',laser)
 
-		highgui.cvWaitKey(10)
+		k = highgui.cvWaitKey(10)
+		if k == 'q':
+			sys.exit()
 
 if __name__ == '__main__':
 	main(sys.argv[1:]);

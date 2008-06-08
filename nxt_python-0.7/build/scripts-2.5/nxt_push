@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!C:\Python25\python.exe
 #
 # nxt_push program -- Push a file to a LEGO Mindstorms NXT brick
 # Copyright (C) 2006  Douglas P Lau

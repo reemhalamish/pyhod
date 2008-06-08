@@ -46,7 +46,7 @@ class TurretControl:
 		self.trigger = Motor(self.bconn,PORT_C)
 
 	def fire(self):
-		self.__rotate(-10,self.trigger,90)
+		self.__rotate(-13,self.trigger,95)
 		time.sleep(0.5)
 		self.__rotate(5,self.trigger,60)
 		
