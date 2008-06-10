@@ -94,9 +94,9 @@ This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher level 
 
 \subsection{Depth Estimation}
 
-Once the turret has centered its camera on the laser pointer, the algorithm then attempts to measure the distance between itself and the object at which it points.  For this, a second laser of a different color (red) is mounted next to the camera on roughly the same optical axis as the camera.  The second laser point is detected by the system and the measured distance in pixels between the laser point and the center of the camera view is used to estimate the distance from the targeted object.
+Once the turret has centered its camera on the laser pointer, the algorithm then attempts to measure the distance between itself and the object at which it points.  For this, a second laser of a different color (red) is mounted next to the camera roughly parrallel to the optical axis of the camera.  The second laser point is detected by the system and then it measures the distance in pixels between the laser point and the center of the camera view. 
 
-Intuitively, if the object is a foot away from the camera, then the distance between the center of the view and the laser point will be fairly large.  However, if the object is a wall fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image.
+Intuitively, the distance between the center of the view and the laser point will be fairly large if the plane its pointing at is only a foot away from the camera.  However, if the plane is fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image. Measuring how far away the laser point is from the vanishing point can give an estimation of the distance between the point and the camera. 
 
 \subsection{Related Work}
 
@@ -139,9 +139,9 @@ We are using a low cost airsoft gun manufactured b DPMS. It is electrically-oper
 
 The experimentation for laser detection was designed to test the detection at various distances from a wall under different lighting conditions. The camera was placed 5, 10, 15, and 20 feet from a white wall. At each location, the camera was given a period of a minute to detect a green moving laser and a red stationary laser that were in the view of the camera for the entire period. Detection accuracy was determined by examine how many frames out of the total number that the laser points were successfully detected. In addition, a low light and high light conditions were creating to see how additional light affect the detection. Each experimentation configuration was repeated 5 times to obtain an average.
 
-\ref{fig:laser_low} shows the results of the laser detection experimentation using low light conditions. Generally, the further away the camera was from the laser point, the more difficult it was to successfully detect it. The failure rate for the moving green laser at 5 feet was a mere 1.6\% while the failure rate at 20 feet went up to 16.6\%. This can be attribited to the pointer getting smaller with increased distance from the wall, thus becoming harder to pin point. More interesting though is that the failure rate for detecting the stationary red laser was much lower than the green laser. This is mostly likely caused by the fact that exposure time on the camera sensor for the green laser was lower at any givin time due to its movement.  
+Figure \ref{fig:laser_low} shows the results of the laser detection experimentation using low light conditions. Generally, the further away the camera was from the laser point, the more difficult it was to successfully detect it. The failure rate for the moving green laser at 5 feet was a mere 1.6\% while the failure rate at 20 feet went up to 16.6\%. This can be attribited to the pointer getting smaller with increased distance from the wall, thus becoming harder to pin point. More interesting though is that the failure rate for detecting the stationary red laser was much lower than the green laser. This is mostly likely caused by the fact that exposure time on the camera sensor for the green laser was lower at any givin time due to its movement.  
 
-\ref{fig:laser_high} shows similar results as \ref{fig:laser_low}. The higher lighting conditions made detection more difficult due to the fact that the laser points' intensities didn't stand out as well. The failure rate for the green laser was 2.6\% at five feet and 29\% at 20 feet. These are roughly twice as high as the low light results.
+Figure \ref{fig:laser_high} shows similar results as Figure \ref{fig:laser_low}. The higher lighting conditions made detection more difficult due to the fact that the laser points' intensities didn't stand out as well. The failure rate for the green laser was 2.6\% at five feet and 29\% at 20 feet. These are roughly twice as high as the low light results.
 
 \begin{figure}[t]
 \begin{center}
@@ -177,9 +177,11 @@ It is important to note that these tests demonstrate false negatives, or failure
 \label{fig:onecol}
 \end{figure}
 
-The results for the distance estimation are located in ~\ref{fig:distance_estimation}.
+The results for the distance estimation are located in Figure \ref{fig:distance_estimation}. The error between measured and estimated distances was around 5\% between 1.5 and 5 feet, but increased drastically at close distances, and fluctuated at distances greater than 5 feet. The error at close distances, such as less than 1.5 feet, was caused by the laser point blooming and become difficult to pin point its exact position. The laser point started to approach its converance point at distances greater than 5 feet which caused it to only move slightly with an increase in distance. This made it difficult to estimate distances.
 
-The distance estimation was not implemented into the turret aim logic due to the low accuracy at distances over eight feet. One of the problems was that the distance estimation accuracy is directly related to how far the distance laser is mounted away from the optical axis.  
+One of the difficulties in destinance estimation using our approach is that accuracy is directly related to how far the distance laser is mounted from the optical axis of the camera. We were limited far we could mount the laser away from the optical axis due to the size of the laser and camera. We could not make it too large because the whole assembly had to be mounted on top of the turret.
+
+Due to the less than expected accuracy of the distance estimation algorithm, it was not implemented into the turret control code used for aiming.
 
 \subsection{Turret Accuracy}
 
