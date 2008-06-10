@@ -28,7 +28,7 @@
 \title{Hammer of Dawn: An Automated Laser-Guided Turret}
 
 \author{Nick Childers, Sean Ford, Marcus Jang\\
-Unversity of California Santa Barbara\\
+Unversity of California, Santa Barbara\\
 {\tt\small nickchilders@umail.ucsb.edu, sford@umail.ucsb.edu, dmjang@cs.ucsb.edu}
 % For a paper whose authors are all at the same institution,
 % omit the following lines up until the closing ``}''.
@@ -186,6 +186,11 @@ The distance estimation was not implemented into the turret aim logic due to the
 
 \section{Discussion and Conclusion}
 
+In this paper we have presented our implementation of a laser-guided turret.  Our goal was to build this system cheaply, quickly, and to make precise shots.  The basic techniques we use for laser detection and turret movement/aiming are not new, however our approach is unique in its overall implementation.
+
+Once properly calibrated, our system is reasonably accurate in both laser detection and shooting.  Further, we were able to build our system with inexpensive consumer-level devices, without having to resort to purchasing custom machine-work or professional lasers/cameras.  We feel that our experimental results show that we were successful achieving our goals.
+
+Unfortunately and expectedly, our device is not perfect.  Laser detection failure rises in high-light situations.  Also, the hardware can create difficulties.  Driver support for the NXT brick is not ideal and the brick is prone to shut-down in the middle of the targetting process.  Also, given that the turret is built from Legos, it is not a surprise that parts would sometimes break loose.  Finally, it is slow.  The entire process, from laser detection to firing the gun can take more than a few seconds.  This is limited by both our hardware and software design.  
 
 \section{Future Work}
 
