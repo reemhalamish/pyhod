@@ -46,6 +46,7 @@ fuzzy.eps: graphs/fuzzy.plot
 	pdflatex  $*
 	bibtex  $*
 	pdflatex  $*
+	pdflatex  $*
 
 clean:
 	@\rm -f \
