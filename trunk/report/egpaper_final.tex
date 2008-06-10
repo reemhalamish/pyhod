@@ -53,6 +53,12 @@ This paper presents our implementation of a laser-guided turret. The turret cons
 
 \section{Introduction}
 
+Laser pointer detection is an important and basic computer vision problem.  It may be viewed as a simple form of motion or pattern detection that can be solved using filters and color space conversions.  Laser detection algorithms may be useful for large-screen presentations, object tracking, 3D depth estimation and other areas.  In this paper, we use laser detection to guide a motorized turret.
+
+Automatic motorized turrets have obvious uses in military and physical security scenarios, but also have uses in surveillance and internet video broadcasting.  In actuality, we designed a turret system because it is interesting and fun to use computers to shoot plastic pellets at laser targets.
+
+Our system incorporates a number of different software algorithms with a hardware implementation made of consumer-level electronic components.
+
 \section{Related Work}
 
 Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance \cite{DBLP:conf/hci/KimLLL07}.  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection \cite{König200715925196}.
