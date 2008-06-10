@@ -92,7 +92,7 @@ Furthermore, the image produced by our web-camera suffers from lossy-compression
 
 Errors may manifest themselves in the thresholded image by one of three scenarios: 1) Extra pixels outside of the laser cluster (outliers) will appear in the thresholded image, 2) the laser point is thresholded out of the image, resulting in an entirely black image, or 3) Both the laser point is undetected and outliers occur in the image.  The second scenario is not difficult problem if the laser point shows up in the majority of frames, as a few frames with no information can be dropped with little penalty.  The first and third scenarios are a more serious issue, as spurious detected pixels will lead to an incorrect mean value for the measured center of the laser.  The best way to avoid these issues is with careful calibration.  However, it is not always possible to completely threshold out outlier pixels.
 
-In our development process we implemented a function to filter out outlier pixels by scanning across all values in a thresholded image, detecting all white pixels not touching any other white pixels (or to put it another way, completely surrounded by black pixels).  These lonely pixels are naively considered outliers, perhaps caused by compression artifacts or poor camera optics and are removed, or changed to black values.  This function seemed to have a marginally positive effect on our output images, but the function slowed our processing time to a crawl and in the end it had to be removed for the sake of real-time performance.It is important to note that these tests demonstrate false negatives, or failure of our implementation to detect a laser point when it appeared in the camera view.  These tests are not able to show the false postive rates, or when spurious/outlier pixels are incorrected detected as a genuine laser point pixel.  To accurately detect or measure false positives is particularly difficult as they are manifested as imprecise detections.  The most obvious example is when a laser point is detected when there is actually none in camera view.  In our testing, we noticed that in certain situations, the detected center of the red laser was offset some pixels from the actual center.  This is an example of jitter, caused by some false positive detections.  We were unable to quantify the rates of false positives because it would require a human to examine each frame of video to check for jitter.  This would be a tedious process and requires a large investment of time, which we do not have.
+In our development process we implemented a function to filter out outlier pixels by scanning across all values in a thresholded image, detecting all white pixels not touching any other white pixels (or to put it another way, completely surrounded by black pixels).  These lonely pixels are naively considered outliers, perhaps caused by compression artifacts or poor camera optics and are removed, or changed to black values.  This function seemed to have a marginally positive effect on our output images, but the function slowed our processing time to a crawl and in the end it had to be removed for the sake of real-time performance.
 
 \subsection{Turret Control}
 
@@ -100,7 +100,7 @@ Once we have detected the laser in the image, the turret needs to take the prope
 
 To remedy this behavior and have both stable and accurate movement, we developed an algorithm in the spirit of a fuzzy controller \cite{jantzen98Logic}. The algorithm considers the X and Y-axes separately, which is appropriate due to the fact that there is a separate motor controlling rotation on those axes. For each axis, the size of the image is mapped to the values between -1.0 to 1.0. The pixel coordinate of the laser is then projected onto this range. For example, an X-value of -0.9 would indicate that the laser is on the far-left side of the image.
 
-This mapping is then divided up into 7 locations:  "Far-Negative", "Negative", "Slight-Negative", "Centered", "Slight-Positive", "Positive", and "Far-Positive". Each of these locations is a fuzzy set with a membership function that gives results as a real number between 0 and 1. An example would be an X-value of 0.0 should be in the "Centered" location with value 1.0, and 0.0 in the other fuzzy locations. If instead the X-value is 0.1, it should be partially in the "Centered" set and partially in the "Slight Positive" set. The exact membership functions are given in \ref{fig:fuzzy}.
+This mapping is then divided up into 7 locations:  Far Positive ($P_f$), Positive ($P$), Slight Positive ($P_s$), Centered ($C$), Slight Negative ($N_s$), Negative ($N$) and Far Negative ($N_f$). Each of these locations is a fuzzy set with a membership function that gives results as a real number between 0 and 1. An example would be an X-value of 0.0 should be in the Centered set with value 1.0, and 0.0 in the other fuzzy sets. If instead the X-value is 0.1, it should be partially in the Centered set and partially in the Slight Positive set. The exact membership functions are given in Figure \ref{fig:fuzzy}.
 
 \begin{figure}[t]
 \begin{center}
@@ -110,9 +110,14 @@ This mapping is then divided up into 7 locations:  "Far-Negative", "Negative", "
 \label{fig:fuzzy}
 \end{figure}
 
-The membership of the X and Y-values are calculated for the 7 fuzzy sets. The final step in determining turret movement is to take these 7 membership values and find one "crisp" result. This result ranges from -1.0 to 1.0 and is used as a multiplier for the low-level turret control code. For example, if the X-axis is allowed to rotate up to 20 degrees in one update, then the actual amount the turret rotates is 20 degrees times this result, with the sign indicating direction of movement. The actual function used to give the crisp result is given in [CRISP EQUATION]
+The membership of the X and Y-values are calculated for the 7 fuzzy sets. The final step in determining turret movement is to take these 7 membership values and find one \textit{crisp} result. This result ranges from -1.0 to 1.0 and is used as a multiplier for the low-level turret control code. For example, if the X-axis is allowed to rotate up to 20 degrees in one update, then the actual amount the turret rotates is 20 degrees times this result, with the sign indicating direction of movement. The actual function used to give the crisp result is given in Equation \ref{eqn:crisp}.
 
-This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher degree of control than basic linear interpolation, while still remaining conceptually simple. By specifying these ranges as we have, and manually adjusting the "crisping" function, we have relatively fine-grained control when the laser is very close to the center, but large rotational movement is allowed if that point deviates from the center.
+\begin{equation}
+	\mathit{Crisp} = \frac{(P_f^2 + 0.5P^2 + 0.2P_s^2) - (N_f^2 + 0.5N^2 + 0.2N_s^2)}{P_f^2+P^2+P_s^2+C^2+N_f^2+N^2+N_s^2}
+\label{eqn:crisp}
+\end{equation}
+
+This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher degree of control than basic linear interpolation, while still remaining conceptually simple. By specifying these ranges as we have, and manually adjusting the crisp function, we have relatively fine-grained control when the laser is very close to the center, but large rotational movement is allowed if that point deviates from the center.
 
 \subsection{Depth Estimation}
 
@@ -178,7 +183,7 @@ Figure \ref{fig:laser_high} shows similar results as Figure \ref{fig:laser_low}.
 \label{fig:onecol}
 \end{figure}
 
-It is important to note that these tests demonstrate false negatives, or failure of our implementation to detect a laser point when it appeared in the camera view.  These tests are not able to show the false postive rates, or when spurious/outlier pixels are incorrected detected as a genuine laser point pixel.  To accurately detect or measure false positives is particularly difficult as they are manifested as imprecise detections.  The most obvious example is when a laser point is detected when there is actually none in camera view.  In our testing, we noticed that in certain situations, the detected center of the red laser was offset some pixels from the actual center.  This is an example of jitter, caused by some false positive detections.  We were unable to quantify the rates of false positives because it would require a human to examine each frame of video to check for jitter.  This would be a tedious process and requires a large investment of time, which we do not have.
+It is important to note that these tests demonstrate false negatives, or failure of our implementation to detect a laser point when it appeared in the camera view.  These tests are not able to show the false postive rates, or when spurious/outlier pixels are incorrected detected as a genuine laser point pixel.  To accurately detect or measure false positives is particularly difficult as they are manifested as imprecise detections.  The most obvious example is when a laser point is detected when there is actually none in camera view.  In our testing, we noticed that in certain situations, the detected center of the red laser was offset some pixels from the actual center.  This is an example of jitter, caused by some false positive detections.  We were unable to quantify the rates of false positives because it would require a human to examine each frame of video to check for jitter.  This would be an overly tedious process with a disproportionately large amount of invested time compared to the value of the information gained.
 
 \subsection{Distance Estimation}
 
@@ -204,14 +209,14 @@ In order to test the accuracy of the final turret, we set up a target made of ti
 
 Before doing the experiment however, manual calibration of the turret was necessary. Up until this experiment, the turret had been attempting to align the target laser to the center of the image. However, the axis that the pellets were fired on was significantly different from this center. To adjust for this, we placed the turret at 10 feet away from the target and fired small bursts. By adding an offset in both the x and y directions to the detected laser point, we could manually adjust the offset of the laser point from the center of the image where the turret was aiming.  We found that the best results were achieved by offsetting the laser point down by about 5 percent the image height and left about 1 percent. However, these adjustments are extremely coarse and do not account for change in distance to the target.
 
-The final results are shown in table [ACCURACY]. 
+The final results are shown in Table \ref{table:accuracy}. 
 
 \begin{table}[ht]
-\caption{Turret Accuracy}
+\caption{Turret Accuracy in inches}
 \centering
 \begin{tabular} {c c c}
 \hline
-Distance & Average Distance & Std Deviation\\
+Turret Distance & Average Distance & Std Deviation\\
 \hline
 5 ft & 1.79 & 0.954 \\
 10 ft & 2.25 & 0.742 \\
