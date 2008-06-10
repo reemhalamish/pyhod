@@ -183,6 +183,28 @@ The distance estimation was not implemented into the turret aim logic due to the
 
 \subsection{Turret Accuracy}
 
+In order to test the accuracy of the final turret, we set up a target made of tissue paper at a fixed distance from the turret, with the target laser fixed such that it would point at the center of this target. The air soft pellets penetrated this paper, leaving a record of how close each shot came to the center of the target. We had a total of three experiments, setting the turret at a distance of 5, 10 and 20 feet. For each experiment, we used 10 shots.
+
+Before doing the experiment however, manual calibration of the turret was necessary. Up until this experiment, the turret had been attempting to align the target laser to the center of the image. However, the axis that the pellets were fired on was significantly different from this center. To adjust for this, we placed the turret at 10 feet away from the target and fired small burst. By adding an offset in both the x and y directions to the detected laser point, we could manually adjust the offset of the laser point from the center of the image where the turret was aiming.  We found that the best results were achieved by offsetting the laser point down by about 5 percent the image height and left about 1 percent. However, these adjustments are extremely coarse and do not account for change in distance to the target.
+
+The final results are shown in table [ACCURACY]. 
+
+\begin{table}[ht]
+\caption{Turret Accuracy}
+\centering
+\begin{tabular} {c c c}
+\hline
+Distance & Average Distance & Std Deviation\\
+\hline
+5 ft & 1.79 & 0.954 \\
+10 ft & 2.25 & 0.742 \\
+20 ft & 2.63 & 1.08 \\
+\hline
+\end{tabular}
+\label{table:accuracy}
+\end{table}
+
+\section{Discussion and Conclusion}
 
 \section{Discussion and Conclusion}
 
