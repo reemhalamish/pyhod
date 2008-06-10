@@ -37,7 +37,7 @@
 \title{Hammer of Dawn: An Automated Laser-Guided Turret}
 
 \author{Nick Childers, Sean Ford, Marcus Jang\\
-Unversity of California, Santa Barbara\\
+University of California, Santa Barbara\\
 {\tt\small nickchilders@umail.ucsb.edu, sford@umail.ucsb.edu, dmjang@cs.ucsb.edu}
 % For a paper whose authors are all at the same institution,
 % omit the following lines up until the closing ``}''.
@@ -90,7 +90,7 @@ One of the difficulties of laser detection is dealing with errors. For instance,
 
 Furthermore, the image produced by our web-camera suffers from lossy-compression artifacts.  The conversion from the original RGB image to HSV color space accentuates these flaws, resulting in a greater likelihood of false negatives/positives in the laser detection algorithm.
 
-Errors may manifest themselves in the thresholded image by one of three scenarios: 1) Extra pixels outside of the laser cluster (outliers) will appear in the thresholded image, 2) the laser point is thresholded out of the image, resulting in an entirely black image, or 3) Both the laser point is undetected and outliers occur in the image.  The second scenario is not difficult problem if the laser point shows up in the majority of frames, as a few frames with no information can be dropped with little penalty.  The first and third scenarios are a more serious issue, as spurious detected pixels will lead to an incorrect mean value for the measured center of the laser.  The best way to avoid these issues is with careful calibration.  However, it is not always possible to completely threshold out outlier pixels.
+Errors may manifest themselves in the thresholded image by one of three scenarios: 1) Extra pixels outside of the laser cluster (outliers) will appear in the thresholded image, 2) the laser point is thresholded out of the image, resulting in an entirely black image, or 3) both the laser point is undetected and outliers occur in the image.  The second scenario is not difficult problem if the laser point shows up in the majority of frames, as a few frames with no information can be dropped with little penalty.  The first and third scenarios are a more serious issue, as spurious detected pixels will lead to an incorrect mean value for the measured center of the laser.  The best way to avoid these issues is with careful calibration.  However, it is not always possible to completely threshold out outlier pixels.
 
 In our development process we implemented a function to filter out outlier pixels by scanning across all values in a thresholded image, detecting all white pixels completely surrounded by black pixels.  These lonely pixels are naively considered outliers and removed, as they are likely caused by compression artifacts or poor camera optics. This function seemed to have a marginally positive effect on our output images, but the function slowed our processing time to a crawl and in the end was removed for the sake of real-time performance.
 
@@ -131,7 +131,7 @@ Intuitively, the distance between the center of the view and the laser point wil
 
 NXT is the second generation robotics kit manufactured by LEGO \cite{nxt}. The primary component of this set is the NXT brick. At its heart is a 32-bit ARM7 micro control and 256K flash memory. The brick features 7 "ports" with proprietary connectors similar in appearance to the standard RJ11 telephone connector. Three of the ports are used to control specially constructed LEGO servos and the other four ports serve as input from the various sensors also manufactured by LEGO. Although there are a wide variety of sensors that can be used directly with the NXT brick, in this project the brick is only responsible for driving the servos that power the turret.
 
-The NXT servos are an upgraded version of their version 1.0 counterpart. In addition to being more powerful then their predecessors, they come with a built in tachometer that is accessible by the NXT brick. The tachometer measures rotation in degrees, where 1 full rotation will output a value of 360 to the NXT brick. This feedback allows for relatively precise control over the servos.
+The NXT servos are an upgraded version of their version 1.0 counterpart. In addition to being more powerful than their predecessors, they come with a built in tachometer that is accessible by the NXT brick. The tachometer measures rotation in degrees, where 1 full rotation will output a value of 360 to the NXT brick. This feedback allows for relatively precise control over the servos.
 
 Programming the NXT brick can be done through a variety of methods. For this project, we decided to use an NXT library written in python \cite{pynxt}. The python library can communicate with the NXT brick with either a wired USB connection or with a wireless link using bluetooth. 
 
@@ -157,7 +157,7 @@ We are using a low cost Airsoft gun manufactured by DPMS. It is electrically-ope
 
 \subsection{Laser Detection}
 
-The experimentation for laser detection was designed to test the detection at various distances from a wall under different lighting conditions. The camera was placed 5, 10, 15, and 20 feet from a white wall. At each location, the camera was given a period of a minute to detect a green moving laser and a red stationary laser that were in the view of the camera for the entire period. Detection accuracy was determined by examining how many frames out of the total number that the laser points were successfully detected. In addition, low light and high light conditions were created to see how additional light affected the detection. Each experimentation configuration was repeated 5 times to obtain an average.
+The experimentation for laser detection was designed to test the detection at various distances from a wall under different lighting conditions. The camera was placed 5, 10, 15, and 20 feet from a white wall. At each location, the camera was given a period of one minute to detect a green moving laser and a red stationary laser that were in the view of the camera for the entire duration. Detection accuracy was determined by examining how many frames out of the total number that the laser points were successfully detected. In addition, low light and high light conditions were created to see how additional light affected the detection. Each experimentation configuration was repeated 5 times to obtain an average.
 
 Figure \ref{fig:laser_low} shows the results of the laser detection experimentation under low light conditions. Generally, the further away the camera was from the laser point, the more difficult it was to successfully detect it. The failure rate for the moving green laser at 5 feet was a mere 1.6\% while the failure rate at 20 feet went up to 16.6\%. This can be attribited to the pointer getting smaller with increased distance from the wall, thus becoming harder to pinpoint. More interesting though is that the failure rate for detecting the stationary red laser was much lower than the green laser. This is most likely caused by the fact that exposure time on the camera sensor for the green laser was lower at any givin time due to its movement.  
 
