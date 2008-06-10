@@ -53,12 +53,6 @@ This paper presents our implementation of a laser-guided turret. The turret cons
 
 \section{Introduction}
 
-\subsection{Related Work}
-
-Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance \cite{DBLP:conf/hci/KimLLL07}.  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection \cite{König200715925196}.
-
-Unfortunately, academic research on laser-guided automatic turrets appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera \cite{defcon}.
-
 \section{Approach}
 
 \subsection{Laser Identification}
@@ -102,7 +96,13 @@ This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher level 
 
 Once the turret has centered its camera on the laser pointer, the algorithm then attempts to measure the distance between itself and the object at which it points.  For this, a second laser of a different color (red) is mounted next to the camera on roughly the same optical axis as the camera.  The second laser point is detected by the system and the measured distance in pixels between the laser point and the center of the camera view is used to estimate the distance from the targeted object.
 
-Intuitively, if the object is a foot away from the camera, then the distance between the center of the view and the laser point will be fairly large.  However, if the object is a wall fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image. 
+Intuitively, if the object is a foot away from the camera, then the distance between the center of the view and the laser point will be fairly large.  However, if the object is a wall fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image.
+
+\subsection{Related Work}
+
+Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance \cite{DBLP:conf/hci/KimLLL07}.  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection \cite{König200715925196}.
+
+Unfortunately, academic research on laser-guided automatic turrets appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera \cite{defcon}.
 
 \section{Hardware}
 
@@ -206,23 +206,23 @@ Distance & Average Distance & Std Deviation\\
 
 \section{Discussion and Conclusion}
 
-In this paper we have presented our implementation of a laser-guided turret.  Our goal was to build this system cheaply, quickly, and to make precise shots.  The basic techniques we use for laser detection and turret movement/aiming are not new, however our approach is unique in its overall implementation.
+In this paper we have presented our implementation of a laser-guided turret.  Our goal was to build this system quickly and cheaply, and for it to make precise shots.  The basic techniques we use for laser detection and turret movement/aiming are not new, however our approach is unique in its overall implementation.
 
-Once properly calibrated, our system is reasonably accurate in both laser detection and shooting.  Further, we were able to build our system with inexpensive consumer-level devices, without having to resort to purchasing custom machine-work or professional lasers/cameras.  We feel that our experimental results show that we were successful achieving our goals.
+Once properly calibrated, our system is reasonably accurate in both laser detection and firing.  Further, we were able to build our system with inexpensive consumer-level devices, without having to resort to purchasing custom machine-work or professional lasers/cameras.  We feel that our experimental results show that we were successful achieving our goals.
 
-Unfortunately and expectedly, our device is not perfect.  Laser detection failure rises in high-light situations.  Also, the hardware can create difficulties.  Driver support for the NXT brick is not ideal and the brick is prone to shut-down in the middle of the targetting process.  Also, given that the turret is built from Legos, it is not a surprise that parts would sometimes break loose.  Finally, it is slow.  The entire process, from laser detection to firing the gun can take more than a few seconds.  This is limited by both our hardware and software design.  
+Unfortunately and expectedly, our device is not perfect.  Laser detection failure rises in high-light situations.  Also, the hardware can create difficulties.  Driver support for the NXT brick is not ideal and the brick is prone to shutting-down in the middle of the targetting process.  Also, given that the turret is built from LEGOs, it is not a surprise that parts would sometimes break loose.  Finally, it is slow.  The entire process, from laser detection to firing the gun can take more than a few seconds.  This is limited by both our hardware and software design.  
 
 \section{Future Work}
 
-In order for the algorithm to work, proper threshold values must be chosen for the Hue and Value images.  This requires manual calibration by the user.  Different values for thresholds must be experimented with until a satisfactorily thresholded final image is generated - one that only shows the laser point.  Though not a priority, it may be possible to greatly reduce manual calibration by allowing the computer to sample incoming images with incrementally different threshold values.  Once an image with a single small cluster of white pixels is found, the automatic calibration would be complete.
+In order for the algorithm to work, proper threshold values must be chosen for the Hue and Value images.  This requires manual calibration by the user.  Different values for thresholds must be experimented with until a satisfactorily thresholded final image is generated - one that only shows the laser point.  In future work, it may be possible to greatly reduce manual calibration by allowing the computer to sample incoming images with incrementally different threshold values.  Once an image with a single small cluster of white pixels is found, the automatic calibration would be complete.
 
-Another improvement could be made using differing combinations of HSV values, or perhaps even one using a different color space altogether.  For example, though our initial tests show that Hue and Value channels ANDed together is an effective approach, perhaps in a different lighting situation, a combination of Hue and Saturation channels would be more useful.  Ultimately, these combinations would require a great deal more testing in different environments than time constraints will allow.  Because of these time constraints, we have only implemented a manual approach to laser light detection.  However, due to testing, we have discovered useful initialization values.  These values can naturally be adjusted by the user during run-time.
+Another improvement could be made using differing combinations of HSV values, or perhaps one using a different color space altogether.  For example, though our tests show that Hue and Value channels ANDed together is an effective approach, perhaps in a different lighting situation, a combination of Hue and Saturation channels would be more useful.  Ultimately, these combinations would require a great deal more testing in different environments than time constraints will allow.  However, due to testing, we have discovered useful initialization values.  Naturally, these values may be adjusted by the user during run-time.
 
-As future work, a complete hardware design would be a high priority.  The NXT hardware, along with the lego construction, while sufficient for our testing purposes, is not sturdy or robust enough for high-speed response to laser detection.  The current implementation takes a considerable amount of time to aim and repositioning before a shot is fired.  In a real-world scenario, turret adjustment time should be measured in milliseconds, not seconds or even minutes.  For this high speed setup, we would need industrial-quality servos, sturdy construction materials, possibly metal, and possibly customized controller electronics.
+A complete hardware design would also be a priority.  The NXT hardware, along with the lego construction, while sufficient for our basic needs, is not sturdy or robust enough for high-speed response to laser detection.  In a real-world scenario, turret adjustment time may be required to measure in milliseconds, rather than seconds as with our current design.  For this high-speed setup, we might need industrial-quality servos, sturdier construction materials, and possibly custom controller electronics.
 
-The camera was also a source of error.  Naturally, for the best possible detection, the best possible camera must be used.  A professional camera with a high frame rate (30+ fps) and resolution, along with stable performance and high speed, uncompressed data transfer would be extremely useful.
+Further, the camera was also a source of error.  For the best possible detection rates, the best possible camera must be used.  A professional camera with a high frame rate (30+ fps) and resolution, along with stable performance and high-speed, uncompressed data transfer would be extremely useful.
 
-The software speed may be improved by switching from Python to C/C++.  With a compiled language, more filtering features may be implemented with far less reduction in speed, such as the naive lonely pixel removal function described earlier.  Automatic calibration is another feature worth researching in the future.
+The software speed may be improved by switching from Python to a compiled language such as C/C++.  With a compiled language, more filtering features may be implemented, such as the naive lonely-pixel-removal function described earlier.  Finally, automatic calibration is another feature worth researching in the future.
 
 {\small
 \bibliographystyle{ieee}
