@@ -29,7 +29,7 @@
 
 \author{Nick Childers, Sean Ford, Marcus Jang\\
 Unversity of California Santa Barbara\\
-{\tt\small nickchilders@umail.ucsb.edu, sford@umail.ucsb.edu, marcusjang@gmail.com}
+{\tt\small nickchilders@umail.ucsb.edu, sford@umail.ucsb.edu, dmjang@cs.ucsb.edu}
 % For a paper whose authors are all at the same institution,
 % omit the following lines up until the closing ``}''.
 % Additional authors and addresses can be added with ``\and'',
@@ -47,18 +47,17 @@ Unversity of California Santa Barbara\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-Our project is a laser guided turret. The turret consists of an Airsoft gun with a camera attached to it and is able to freely rotate with two degrees of freedom. The camera is used to find a laser point in its view and then point the turret at it. A secondary laser that is attached to the turret is then used to determine distance between the turret and the object it is pointing at. Once distance is calculated, the Airsoft gun accurately shoots the object.
+This paper presents our implementation of a laser-guided turret. The turret consists of an Airsoft gun with an attached web-camera.  It is able to rotate with two degrees of freedom for tracking and aiming.  The camera transmits a video feed used for laser point detection.  One green laser is held by a user and pointed at a target.  The turret, guided by our software, will automatically aim at this target.  A secondary red laser, attached to the turret, is used to determine distance between the turret and the targetted object.  Once aiming is complete and distance is calculated, the Airsoft gun shoots the object.
 \end{abstract}
-
 %%%%%%%%% BODY TEXT
 
 \section{Introduction}
 
 \subsection{Related Work}
 
-Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance [REFERENCE KIM].  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving only infrared light, making detection easy  [REFERENCE KONIG].
+Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance [REFERENCE KIM].  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection [REFERENCE KONIG].
 
-Unfortunately, academic research of laser guided turrets, appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera (as opposed to a camera attached to the turret) [REFERENCE DEFCON].
+Unfortunately, academic research on laser-guided automatic turrets appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera [REFERENCE DEFCON].
 
 \section{Approach}
 
@@ -66,15 +65,11 @@ Unfortunately, academic research of laser guided turrets, appears to be scarce. 
 
 \subsection{Laser Identification}
 
-Laser points have a very characteristic look to them. They tend to be small brightly colored points that can be reliably detected using computer vision techniques. The algorithm to detect laser points in an image involves first converting the image to HSV color space. HSV is useful because only single channels must be examined to determine a pixel's color or relative brightness. The Hue and Value components of the HSV image are extracted into separate images. The Hue and Value images are thresholded to allow extraction of pixels of a specific color, (in our case, the lasers detected are red or green), that are fairly bright.  The thresholded images are monochrome, with black pixels representing values outside the threshold boundaries and white pixels of matched values within the boundaries.  These thresholded images are logically ANDed together, leaving only white pixels which exhibit both the correct color and brightness characteristics.  If the algorithm is successful, the final image is almost entirely black, with a small cluster of white pixels representing the laser point.
+Laser points have a very characteristic look. They tend to be small brightly colored points that can be reliably detected using computer vision techniques. The algorithm we use to detect laser points in an image involves first converting the image to HSV color space. HSV is useful because only single channels must be examined to determine a pixel's color or relative brightness. The Hue and Value components of the HSV image are extracted into separate images. The Hue and Value images are thresholded to allow extraction of pixels of a specific color, (in our case, the lasers detected are red or green), that are fairly bright.  The thresholded images are monochrome, with black pixels representing values outside the threshold boundaries and white pixels of matched values within the boundaries.  These thresholded images are logically ANDed together, leaving only white pixels which exhibit both the correct color and brightness characteristics.  If the algorithm is successful, the final image is almost entirely black, with a small cluster of white pixels representing the laser point.
 
-As a proof-of-concept that the algorithm can generate useful values, we implemented the above algorithm in Python using OpenCV and added a feature to display the original image with a small green square drawn around the detected laser point.  As the laser point moves to different places in the scene in different frames, the square is automatically re-drawn around the new point. The center of the laser point is measured by calculating the mean coordinate of the white points in the thresholded image.
+We implemented the above algorithm in Python using OpenCV and added a feature to display the original image with a small square drawn around the detected laser point.  As the laser point moves to different places in the scene, the square is automatically re-drawn around the new point.  The center of the laser point is measured by calculating the mean coordinate of the white points in the thresholded image.
 
-\subsection{Possible Improvements}
-
-In order for the algorithm to work, proper threshold values must be chosen for the Hue and Value images.  This requires manual calibration by the user.  Different values for thresholds must be experimented with until a satisfactorily thresholded final image is generated - one that only shows the laser point.  Though not a priority, it may be possible to greatly reduce manual calibration by allowing the computer to sample incoming images with incrementally different threshold values.  Once an image with a single small cluster of white pixels is found, the automatic calibration would be complete.
-
-Another improvement could be made using differing combinations of HSV values, or perhaps even one using a different color space altogether.  For example, though our initial tests show that Hue and Value channels ANDed together is an effective approach, perhaps in a different lighting situation, a combination of Hue and Saturation channels would be more useful.  Ultimately, these combinations would require a great deal more testing in different environments than time constraints will allow.  Because of these time constraints, we have only implemented a manual approach to laser light detection.  However, based on our tests, we have hardcoded initial values which tend to be useful in many situations.  These values can naturally be adjusted by the user during run-time.
+Our implementation uses two lasers: one red and one green.  We are able to reliably differentiate between the laser points by using different threshold values on the Hue images for each color.
 
 \subsection{Error Handling}
 
@@ -90,9 +85,6 @@ In our development process we implemented a function to filter out outlier pixel
 
 Once the laser point has been identified in the camera's view, the turret will then need to be moved so that it is pointing at the point. The camera will be placed so that the optical axis is pointing in the same direction as the turret. This allows us to simply check the location of the laser point with respect to the center of the image to figure out where the turret needs to move to. For example, right rotation will need to be applied if the laser point is to the immediate right of the center of the camera's view.
 
-
-
-
 \subsection{Depth Estimation}
 
 Once the turret has centered its camera on the laser pointer, the algorithm then attempts to measure the distance between itself and the object at which it points.  For this, a second laser of a different color (red) is mounted next to the camera on roughly the same optical axis as the camera.  The second laser point is detected by the system and the measured distance in pixels between the laser point and the center of the camera view is used to estimate the distance from the targeted object.
@@ -102,6 +94,7 @@ Intuitively, if the object is a foot away from the camera, then the distance bet
 \section{Hardware}
 
 \subsection{NXT}
+
 NXT is the second generation robotics kit manufactured by LEGO \cite{nxt}. The primary component of this set is the NXT brick. At its heart is a 32-bit ARM7 micro control and 256K flash memory. The brick features 7 "ports" with proprietary connectors similar in appearance to the standard RJ11 telephone connector. Three of the ports are used to control specially constructed LEGO servos and the other four ports serve as input from the various sensors also manufactured by LEGO. Although there are a wide variety of sensors that can be used directly with the NXT brick, in this project the brick is only responsible for driving the servos that power the turret.
 
 The NXT servos are an upgraded version of their version 1.0 counterpart. In addition to being more powerful then their predecessors, they come with a built in tachometer that is accessible by the NXT brick. The tachometer measures rotation in degrees, where 1 full rotation will output a value of 360 to the NXT brick. This feedback allows for relatively precise control over the servos.
@@ -111,16 +104,19 @@ Programming the NXT brick can be done through a variety of methods. For this pro
 Our design is an assembly built around two motors allowing for two-degrees of freedom. Our Airsoft gun and camera is mounted on top of this construct and may rotate freely left, right, up and down, limited by a USB cable connecting the camera to the controller laptop.
  
 \subsection{Camera}
+
 We are using Logitech Quickcam Communicate STX \cite{logi} as our camera.  It is a small, inexpensive webcam with a maximum 640x480 resolution.  We use a lower 320x240 resolution for video quality and driver compatibility issues.  As with most webcams, the optics and color representation are not highly accurate, and the source video appears to suffer from some compression artifacts.  However, it is very lightweight, connects to the computer via USB and works without special drivers in Ubuntu Linux (our development operating system).
 
-The camera also has special Windows software for manual adjustments of exposure time, gain, white balance and color correction.  During development, we noted that the manual control of exposure time was particularly useful laser detection.  By turning the exposure down to its lowest setting, we are able to more easily seperate the bright laser point from ordinary ambient lighting recorded by the camera.  We were also able to mimic this feature in Linux by placing a filter in front of the camera to reduce the total detected light.  Unfortunately, this physical filter was not as effective as the Windows-only manual controls, so we chose to run our software in Windows for testing.
+The camera also has special Windows software for manual adjustments of exposure time, gain, white balance and color correction.  During development, we noted that the manual control of exposure time is particularly useful laser detection.  By turning the exposure down to its lowest setting, we are able to more easily seperate the bright laser point from ordinary ambient lighting recorded by the camera.  We were also able to mimic this feature in Linux by placing a filter in front of the camera to reduce the total detected light.  Unfortunately, this physical filter was not as effective as the Windows-only manual controls, so we chose to run our software in Windows for testing.
 
 \subsection{Lasers}
-We are currently using two lasers, one red model CP-TI-327-3VB, from Calpac Lasers \cite{calpac}.  This particular model was chosen primarily because they are much shorter than typically lasers.  Their small size will make it easier to mount onto a turret for depth detection.  In addition, it features an on/off switch for continuous hands-free operation.
 
-Our second laser is a generic green laser pointer with brighter output than the red laser, but lacking an on/off switch and somewhat larger and heavier.  Due to its relative brightness, this laser is easy to detect with our detection software.  We chose to use this as the targeting laser.
+We are currently using two lasers, one red model CP-TI-327-3VB, from Calpac Lasers \cite{calpac}.  This particular model was chosen primarily because they are much shorter than typically lasers.  Their small size makes it easier to mount onto a turret for depth detection.  In addition, it features an on/off switch for continuous hands-free operation.
+
+Our second laser is a generic green laser pointer with brighter output than the red laser, but lacking an on/off switch and somewhat larger and heavier.  Due to its relative brightness, this laser is easy to detect with our detection software.  We use this as the targeting laser.
 
 \subsection{Airsoft}
+
 We are using a low cost airsoft gun manufactured b DPMS. It is electrically-operated air gun that fires the standard 6mm plastic pellets typical of these class of toys. Although many airsoft guns have a muzzle velocity of over 300 feet per second, this particular one is fairly light, rated at only 110 feet per second. The bulk of the turret assembly we be built around effectively mounting this airsoft gun.
 
 
@@ -169,11 +165,15 @@ The distance estimation was not implemented into the turret aim logic due to the
 
 
 \section{Future Work}
+
+In order for the algorithm to work, proper threshold values must be chosen for the Hue and Value images.  This requires manual calibration by the user.  Different values for thresholds must be experimented with until a satisfactorily thresholded final image is generated - one that only shows the laser point.  Though not a priority, it may be possible to greatly reduce manual calibration by allowing the computer to sample incoming images with incrementally different threshold values.  Once an image with a single small cluster of white pixels is found, the automatic calibration would be complete.
+
+Another improvement could be made using differing combinations of HSV values, or perhaps even one using a different color space altogether.  For example, though our initial tests show that Hue and Value channels ANDed together is an effective approach, perhaps in a different lighting situation, a combination of Hue and Saturation channels would be more useful.  Ultimately, these combinations would require a great deal more testing in different environments than time constraints will allow.  Because of these time constraints, we have only implemented a manual approach to laser light detection.  However, due to testing, we have discovered useful initialization values.  These values can naturally be adjusted by the user during run-time.
 As future work, a complete hardware design would be a high priority.  The NXT hardware, along with the lego construction, while sufficient for our testing purposes, is not sturdy or robust enough for high-speed response to laser detection.  The current implementation takes a considerable amount of time to aim and repositioning before a shot is fired.  In a real-world scenario, turret adjustment time should be measured in milliseconds, not seconds or even minutes.  For this high speed setup, we would need industrial-quality servos, sturdy construction materials, possibly metal, and possibly customized controller electronics.
 
 The camera was also a source of error.  Naturally, for the best possible detection, the best possible camera must be used.  A professional camera with a high frame rate (30+ fps) and resolution, along with stable performance and high speed, uncompressed data transfer would be extremely useful.
 
-The software speed can be substantially improved by switching from Python to C/C++.  With a compiled language, more filtering features may be implemented with far less reduction in speed, such as the naive lonely pixel removal function described earlier.  Automatic calibration is another feature worth researching in the future.
+The software speed may be improved by switching from Python to C/C++.  With a compiled language, more filtering features may be implemented with far less reduction in speed, such as the naive lonely pixel removal function described earlier.  Automatic calibration is another feature worth researching in the future.
 
 \begin{figure}[t]
 \begin{center}
@@ -183,9 +183,6 @@ The software speed can be substantially improved by switching from Python to C/C
 \label{fig:long}
 \label{fig:onecol}
 \end{figure}
-
-
-
 
 \begin{thebibliography}{1}
 
@@ -199,9 +196,11 @@ The software speed can be substantially improved by switching from Python to C/C
 
   \bibitem{calpac} Calpac Lasers. \url{http://calpaclasers.com/laser\_pointers.html}
 
+ \end{thebibliography}
 
-  \end{thebibliography}
-
-
+{\small
+\bibliographystyle{ieee}
+\bibliography{egbib}
+}
 
 \end{document}
