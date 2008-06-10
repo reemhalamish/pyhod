@@ -2,7 +2,7 @@ DOC = egpaper_final.tex
 #SUBDOCS =
 #FIGURES = 
 #FIGURES_DEL =
-GRAPHS = laser_high.eps laser_low.eps
+GRAPHS = laser_high.eps laser_low.eps fuzzy.eps
 
 
 LATEX = latex
@@ -30,6 +30,9 @@ laser_low.eps: graphs/laser_low.plot graphs/laser_low.txt
 
 laser_high.eps: graphs/laser_high.plot graphs/laser_high.txt
 	gnuplot graphs/laser_high.plot
+
+fuzzy.eps: graphs/fuzzy.plot
+	gnuplot graphs/fuzzy.plot
 
 %.dvi: %.tex ${FIGURES} ${GRAPHS}
 	$(LATEX) $<
