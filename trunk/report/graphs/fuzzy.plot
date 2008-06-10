@@ -2,6 +2,7 @@ set term postscript eps
 set output "fuzzy.eps"
 set xrange [-1:1]
 set yrange [0:1.1]
+set size 0.9,0.9
 
 set xtics(-0.9,-0.7,-0.5,-0.4,-0.3,-0.1,0.0,0.1,0.3,0.4,0.5,0.7,0.9)
 

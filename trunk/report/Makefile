@@ -4,7 +4,7 @@ DOC = egpaper_final.tex
 #FIGURES_DEL =
 GRAPHS = laser_high.eps laser_low.eps distance_estimation.eps fuzzy.eps
 
-LATEX = latex
+LATEX = pdflatex
 BIBTEX = bibtex
 FIG2DEV = fig2dev
 FIG2DEV_OPTS = -L eps
@@ -20,37 +20,32 @@ RERUNBIB = "No file.*\.bbl|Citation.*undefined"
 all: ${GRAPHS} ${FIGURES} pdf ${SUBDOCS}
 
 pdf: $(DOC:.tex=.pdf)
-ps:  $(DOC:.tex=.ps)
-dvi: $(DOC:.tex=.dvi)
 
 
 laser_low.eps: graphs/laser_low.plot graphs/laser_low.txt
 	gnuplot graphs/laser_low.plot
+	ps2pdf -dEPSCrop laser_low.eps
 
 laser_high.eps: graphs/laser_high.plot graphs/laser_high.txt
 	gnuplot graphs/laser_high.plot
+	ps2pdf -dEPSCrop laser_high.eps
 
 distance_estimation.eps: graphs/distance_estimation.plot graphs/distance_estimation.txt
 	gnuplot graphs/distance_estimation.plot
+	ps2pdf -dEPSCrop distance_estimation.eps
 
 fuzzy.eps: graphs/fuzzy.plot
 	gnuplot graphs/fuzzy.plot
+	ps2pdf -dEPSCrop fuzzy.eps
 
-%.dvi: %.tex ${FIGURES} ${GRAPHS}
-	$(LATEX) $<
-	egrep -c $(RERUNBIB) $*.log && ($(BIBTEX) $*;$(LATEX) $<) ; true
-	egrep $(RERUN) $*.log && ($(LATEX) $<) ; true
-	egrep $(RERUN) $*.log && ($(LATEX) $<) ; true
-	egrep -i "(Reference|Citation).*undefined" $*.log ; true
 
 %.eps: %.fig
 	${FIG2DEV} ${FIG2DEV_OPTS} $< > $@
 
-%.ps: %.dvi
-	${DVIPS} ${DVIPS_OPTS}  $< -o $@
-
-%.pdf: %.ps
-	${PS2PDF} ${PS2PDF_OPTS}  $<
+%.pdf: %.tex
+	pdflatex  $*
+	bibtex  $*
+	pdflatex  $*
 
 clean:
 	@\rm -f \
@@ -62,6 +57,7 @@ clean:
         $(DOC:.tex=.ps)  \
         $(DOC:.tex=.bbl) \
         $(DOC:.tex=.blg) \
+	$(GRAPHS:.eps=.pdf) \
         ${FIGURES_DEL}
 	rm -f ${GRAPHS}
 
