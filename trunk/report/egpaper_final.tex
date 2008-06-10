@@ -167,7 +167,17 @@ It is important to note that these tests demonstrate false negatives, or failure
 
 \subsection{Distance Estimation}
 
-Figure TODO shows the results of the distance estimation.
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=0.8\linewidth]{distance_estimation.eps}
+\end{center}
+   \caption{Distance estimation.}
+\label{fig:distance_estimation}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
+The results for the distance estimation are located in ~\ref{fig:distance_estimation}.
 
 The distance estimation was not implemented into the turret aim logic due to the low accuracy at distances over eight feet. One of the problems was that the distance estimation accuracy is directly related to how far the distance laser is mounted away from the optical axis.  
 
@@ -188,29 +198,6 @@ As future work, a complete hardware design would be a high priority.  The NXT ha
 The camera was also a source of error.  Naturally, for the best possible detection, the best possible camera must be used.  A professional camera with a high frame rate (30+ fps) and resolution, along with stable performance and high speed, uncompressed data transfer would be extremely useful.
 
 The software speed may be improved by switching from Python to C/C++.  With a compiled language, more filtering features may be implemented with far less reduction in speed, such as the naive lonely pixel removal function described earlier.  Automatic calibration is another feature worth researching in the future.
-
-\begin{figure}[t]
-\begin{center}
-  \includegraphics[width=0.8\linewidth]{hammer_069_a.eps}
-\end{center}
-   \caption{Future Revision of our turret.}
-\label{fig:long}
-\label{fig:onecol}
-\end{figure}
-
-\begin{thebibliography}{1}
-
-  \bibitem{olsen01laser} Dan R. Olsen and S. Travis Nielsen {\em Laser pointer interaction.} 2001. 
-
-  \bibitem{nxt} \url{http://www.lego.com/eng/info/default.asp?page=pressdetail&contentid=17278&countrycode=2057&yearcode=&archive=false}
-
-  \bibitem{pynxt} \url{http://home.comcast.net/~dplau/nxt\_python/}
-  
-	\bibitem{logi} Logitech Website. \url{http://www.logitech.com/index.cfm/webcam\_communications/webcams/devices/352&cl=us,en}
-
-  \bibitem{calpac} Calpac Lasers. \url{http://calpaclasers.com/laser\_pointers.html}
-
- \end{thebibliography}
 
 {\small
 \bibliographystyle{ieee}

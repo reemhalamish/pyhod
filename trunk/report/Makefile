@@ -2,8 +2,7 @@ DOC = egpaper_final.tex
 #SUBDOCS =
 #FIGURES = 
 #FIGURES_DEL =
-GRAPHS = laser_high.eps laser_low.eps fuzzy.eps
-
+GRAPHS = laser_high.eps laser_low.eps distance_estimation.eps fuzzy.eps
 
 LATEX = latex
 BIBTEX = bibtex
@@ -30,6 +29,9 @@ laser_low.eps: graphs/laser_low.plot graphs/laser_low.txt
 
 laser_high.eps: graphs/laser_high.plot graphs/laser_high.txt
 	gnuplot graphs/laser_high.plot
+
+distance_estimation.eps: graphs/distance_estimation.plot graphs/distance_estimation.txt
+	gnuplot graphs/distance_estimation.plot
 
 fuzzy.eps: graphs/fuzzy.plot
 	gnuplot graphs/fuzzy.plot
