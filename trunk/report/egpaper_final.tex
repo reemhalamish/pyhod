@@ -14,6 +14,15 @@
 % run, let it finish, and you should be clear).
 \usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
 
+\usepackage{url}
+
+%% Define a new 'leo' style for the package that will use a smaller font.
+\makeatletter
+\def\url@leostyle{%
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+%% Now actually use the newly defined style.
+\urlstyle{leostyle}
 
 \cvprfinalcopy % *** Uncomment this line for the final submission
 
@@ -87,22 +96,23 @@ In our development process we implemented a function to filter out outlier pixel
 
 \subsection{Turret Control}
 
-Once we have detected the laser in the image, the turret needs to take the proper course of action. Although it is a simple matter to state that if the point is on the left side of the image, and we would like it to be in the center of the image, then the turret should rotate left. However, this simple statement doesn't easily translate into code.  In the early stages of development, we found that if the point was be slightly to the left, the turret would then overshoot the point, moving the point slightly to the right, and then overshoot again. Though this oscillating turret behavior was somewhat amusing to watch, it was not very practical.
+Once we have detected the laser in the image, the turret needs to take the proper course of action. It is a simple enough matter to state that if the point is on the left side of the image, and we would like it to be in the center of the image, then the turret should rotate left. However, this simple statement doesn't easily translate into code.  In the early stages of development, we found that if the point was be slightly to the left, the turret would then overshoot the point, moving the point slightly to the right, and then overshoot again. Though this oscillating turret behavior was somewhat amusing to watch, it was not very practical.
 
-To remedy this behavior and have both stable and accurate movement, we developed an algorithm in the spirit of a fuzzy controller. The algorithm considers the X and Y-axis separately, which is appropriate due to the fact that there is a separate motor controlling rotation on those axes. For each axis, the size of the image is mapped to the values between -1.0 to 1.0. The pixel coordinate of the laser is then projected onto this range. For example, an X-value of -0.9 would indicate that the laser is on the far-left side of the image.
+To remedy this behavior and have both stable and accurate movement, we developed an algorithm in the spirit of a fuzzy controller \cite{jantzen98Logic}. The algorithm considers the X and Y-axis separately, which is appropriate due to the fact that there is a separate motor controlling rotation on those axes. For each axis, the size of the image is mapped to the values between -1.0 to 1.0. The pixel coordinate of the laser is then projected onto this range. For example, an X-value of -0.9 would indicate that the laser is on the far-left side of the image.
 
-This mapping is then divided up into 7 locations:  "Far-Negative", "Negative", "Slight-Negative", "Centered", "Slight-Positive", "Positive", and "Far-Positive". Each of these locations is a fuzzy set with a membership function that gives results as a real number between 0 and 1. An example would be an X-value of 0.0 should be in the "Centered" location with value 1.0, and 0.0 in the other fuzzy locations. If instead the X-value is 0.1, it should be partially in the "Centered" set and partially in the "Slight Positive" set. The exact membership functions are given in image [FUZZY].
+This mapping is then divided up into 7 locations:  "Far-Negative", "Negative", "Slight-Negative", "Centered", "Slight-Positive", "Positive", and "Far-Positive". Each of these locations is a fuzzy set with a membership function that gives results as a real number between 0 and 1. An example would be an X-value of 0.0 should be in the "Centered" location with value 1.0, and 0.0 in the other fuzzy locations. If instead the X-value is 0.1, it should be partially in the "Centered" set and partially in the "Slight Positive" set. The exact membership functions are given in \ref{fig:fuzzy}.
 
 \begin{figure}[t]
 \begin{center}
   \includegraphics[width=0.8\linewidth]{fuzzy.eps}
 \end{center}
    \caption{Fuzzy Sets used for Turret Control.}
+\label{fig:fuzzy}
 \end{figure}
 
 The membership of the X and Y-values are calculated for the 7 fuzzy sets. The final step in determining turret movement is to take these 7 membership values and find one "crisp" result. This result ranges from -1.0 to 1.0 and is used as a multiplier for the low-level turret control code. For example, if the X-axis is allowed to rotate up to 20 degrees in one update, then the actual amount the turret rotates is 20 degrees times this result, with the sign indicating direction of movement. The actual function used to give the crisp result is given in [CRISP EQUATION]
 
-This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher level of granular control then a simple linear interpolation, while remaining conceptually simple. By specifying these ranges as we have, and manually adjusting the "crisping" function, we have relatively fine-grained control when the laser is very close to the center, but the large rotational movement is allowed if that point deviates from the center.
+This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher degree of control then basic linear interpolation, while still remaining conceptually simple. By specifying these ranges as we have, and manually adjusting the "crisping" function, we have relatively fine-grained control when the laser is very close to the center, but large rotational movement is allowed if that point deviates from the center.
 
 \subsection{Depth Estimation}
 
