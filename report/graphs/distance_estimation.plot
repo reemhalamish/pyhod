@@ -1,4 +1,4 @@
-set term postscript eps 
+set term postscript eps
 set output "distance_estimation.eps"
 set title "Distance Estimation"
 set size 0.55,0.55
