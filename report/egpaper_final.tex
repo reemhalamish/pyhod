@@ -53,6 +53,12 @@ This paper presents our implementation of a laser-guided turret. The turret cons
 
 \section{Introduction}
 
+\section{Related Work}
+
+Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance \cite{DBLP:conf/hci/KimLLL07}.  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection \cite{König200715925196}.
+
+Unfortunately, academic research on laser-guided automatic turrets appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera \cite{defcon}.
+
 \section{Approach}
 
 \subsection{Laser Identification}
@@ -96,13 +102,7 @@ This algorithm, which borrows heavily on Fuzzy Logic, allows for a higher level 
 
 Once the turret has centered its camera on the laser pointer, the algorithm then attempts to measure the distance between itself and the object at which it points.  For this, a second laser of a different color (red) is mounted next to the camera roughly parrallel to the optical axis of the camera.  The second laser point is detected by the system and then it measures the distance in pixels between the laser point and the center of the camera view. 
 
-Intuitively, the distance between the center of the view and the laser point will be fairly large if the plane its pointing at is only a foot away from the camera.  However, if the plane is fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image. Measuring how far away the laser point is from the vanishing point can give an estimation of the distance between the point and the camera. 
-
-\subsection{Related Work}
-
-Laser pointer detection is an area with a large amount of previous academic research, particularly in the context of displays controlled via laser pointers.  One previous approach is to split a source RGB reference video feed into HSI color space and use a red (630nm - 650nm) band-pass filter to enhance detection performance \cite{DBLP:conf/hci/KimLLL07}.  Another approach is to use multiple cameras to cover a large viewing area and a laser pointer that emits both visible and infrared light.  A filter is placed over the camera to remove visible light, leaving mostly infrared light for detection \cite{König200715925196}.
-
-Unfortunately, academic research on laser-guided automatic turrets appears to be scarce.  However there are numerous examples of hobbyist (non-academic) automated turrets available on the internet.  One particularly interesting one went through several prototypes, features a custom-built turret and a stationary camera \cite{defcon}.
+Intuitively, the distance between the center of the view and the laser point will be fairly large if the plane its pointing at is only a foot away from the camera.  However, if the plane is fifteen feet away from the turret, then the measured distance will only be a few pixels.  This is a simple exploitation of the fact that parallel lines meet at a vanishing point in a perspective view image. Measuring how far away the laser point is from the vanishing point can give an estimation of the distance between the point and the camera.
 
 \section{Hardware}
 
